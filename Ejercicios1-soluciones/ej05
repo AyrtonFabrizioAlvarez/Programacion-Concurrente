@@ -1,0 +1,82 @@
+programa ej05
+procesos
+  proceso juntarFlores
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  
+  proceso dejarFlores
+  comenzar
+    mientras HayFlorEnLaBolsa
+      depositarPapel
+  fin
+  
+  proceso juntarPapeles
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  
+  proceso dejarPapeles
+  comenzar
+    mientras HayPapelEnLaBolsa
+      depositarPapel
+  fin
+  
+  proceso recorrerCalle
+  comenzar
+    repetir 19
+      juntarFlores
+      mover
+    dejarFlores
+    
+  fin
+  
+  proceso recorrerAvenida
+  comenzar
+    repetir 19
+      juntarPapeles
+      mover
+    dejarPapeles
+  fin
+  
+areas
+  ciudad1: AreaP(1, 75, 20, 80)
+  ciudad2: AreaP(75, 80, 80, 99)
+  ciudad3: AreaP(80, 10, 99, 15)
+  ciudad4: AreaP(10, 1, 15, 20)
+robots
+  robot tipo1
+  comenzar
+    derecha
+    recorrerCalle
+    Pos(PosAv - 19, PosCa - 5)
+    recorrerCalle
+  fin
+  
+  robot tipo2
+  comenzar
+    recorrerAvenida
+    Pos(PosAv + 5, PosCa - 19)
+    recorrerAvenida
+  fin
+variables
+  robot1: tipo1
+  robot2: tipo2
+  robot3: tipo1
+  robot4: tipo2
+comenzar
+  AsignarArea(robot1, ciudad1)
+
+  AsignarArea(robot2, ciudad2)
+
+  AsignarArea(robot3, ciudad3)
+
+  AsignarArea(robot4, ciudad4)
+
+  Iniciar(robot1, 1, 80)
+  Iniciar(robot2, 75, 80)
+  Iniciar(robot3, 80, 15)
+  Iniciar(robot4, 10, 1)
+fin

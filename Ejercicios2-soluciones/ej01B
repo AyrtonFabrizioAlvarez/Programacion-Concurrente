@@ -1,0 +1,55 @@
+programa ej01-practica2
+procesos
+  proceso juntarFlores(ES flor:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flor:= flor + 1
+  fin
+  proceso recorrer(ES flor:numero)
+  comenzar
+    repetir 9
+      juntarFlores(flor)
+      mover
+    juntarFlores(flor)
+  fin
+ 
+areas
+  ciudad1: AreaP(1, 1, 1, 10)
+  ciudad2: AreaP(2, 11, 2, 20)
+  ciudad3: AreaP(2, 1, 2, 1)
+  
+robots
+  robot tipo1
+  variables
+    flor:numero
+  comenzar
+    flor:= 0
+    recorrer(flor)
+    EnviarMensaje(flor, robot3)
+  fin
+  
+  robot tipo2
+  variables
+    flor1, flor2:numero
+  comenzar
+    RecibirMensaje(flor1, *)
+    RecibirMensaje(flor2, *)
+    si (flor1 > flor2)
+      Informar(flor1 - flor2)
+    sino
+      Informar(flor2 - flor1)
+  fin
+  
+variables
+  robot1: tipo1
+  robot2: tipo1
+  robot3: tipo2
+comenzar
+  AsignarArea(robot1, ciudad1)
+  AsignarArea(robot2, ciudad2)
+  AsignarArea(robot3, ciudad3)
+  Iniciar(robot1, 1, 1)
+  Iniciar(robot2, 2, 11)
+  Iniciar(robot3, 2, 1)
+fin

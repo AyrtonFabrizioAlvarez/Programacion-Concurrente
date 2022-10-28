@@ -1,0 +1,91 @@
+programa ej03
+procesos
+  proceso juntarPapeles(ES papel:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      papel:= papel + 1
+  fin
+  
+  proceso juntarFlores(ES flor:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flor:= flor + 1
+  fin
+  
+  proceso recorrer10AvP(ES papel:numero)
+  comenzar
+    derecha
+    repetir 9
+      juntarPapeles(papel)
+      mover
+    juntarPapeles(papel)
+  fin
+  
+  proceso recorrer10AvF(ES flor:numero)
+  comenzar
+    derecha
+    repetir 9
+      juntarFlores(flor)
+      mover
+    juntarFlores(flor)
+  fin
+  
+areas
+  ciudad1: AreaP(1, 1, 10, 1)
+  ciudad2: AreaP(11, 1, 20, 1)
+  ciudad3: AreaP(1, 5, 10, 5)
+  ciudad4: AreaP(11, 5, 20, 5)
+robots
+  robot tipo1
+  variables
+    papel:numero
+  comenzar
+    recorrer10AvP(papel)
+    EnviarMensaje(papel, a2)
+  fin
+  
+  robot tipo11
+  variables
+    papel, papelA1:numero
+  comenzar
+    RecibirMensaje(papelA1, a1)
+    recorrer10AvP(papel)
+    papel:= papel + papelA1
+    Informar(papel)
+  fin
+  
+  robot tipo2
+  variables
+    flor:numero
+  comenzar
+    recorrer10AvF(flor)
+    EnviarMensaje(flor, b2)
+  fin
+  
+  robot tipo22
+  variables
+    flor, florB1:numero
+  comenzar
+    RecibirMensaje(florB1, b1)
+    recorrer10AvF(flor)
+    flor:= flor + florB1
+    Informar(flor)
+  fin
+  
+variables
+  a1: tipo1
+  a2: tipo11
+  b1: tipo2
+  b2: tipo22
+comenzar
+  AsignarArea(a1, ciudad1)
+  AsignarArea(a2, ciudad2)
+  AsignarArea(b1, ciudad3)
+  AsignarArea(b2, ciudad4)
+  Iniciar(a1, 1, 1)
+  Iniciar(a2, 11, 1)
+  Iniciar(b1, 1, 5)
+  Iniciar(b2, 11, 5)
+fin

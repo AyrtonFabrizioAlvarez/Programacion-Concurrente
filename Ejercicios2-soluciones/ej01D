@@ -1,0 +1,99 @@
+programa ej01-practica2
+procesos
+  proceso juntarFlores(ES flor:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flor:= flor + 1
+  fin
+  proceso recorrer(ES flor:numero)
+  comenzar
+    repetir 9
+      juntarFlores(flor)
+      mover
+    juntarFlores(flor)
+  fin
+ 
+areas
+  ciudad1: AreaP(1, 1, 1, 10)
+  ciudad2: AreaP(2, 11, 2, 20)
+  ciudad3: AreaP(3, 21, 3, 30)
+  ciudad4: AreaP(4, 31, 4, 40)
+  ciudad5: AreaP(5, 41, 5, 50)
+  ciudad6: AreaP(6, 51, 6, 60)
+  ciudad7: AreaP(2, 1, 2, 1)
+  
+robots
+  robot tipo1
+  variables
+    flor:numero
+    id:numero
+  comenzar
+    flor:= 0
+    RecibirMensaje(id, robot7)
+    recorrer(flor)
+    EnviarMensaje(id, robot7)
+    EnviarMensaje(flor, robot7)
+  fin
+  
+  robot tipo2
+  variables
+    flor, id, maxF, maxR:numero
+  comenzar
+    maxF:= -1
+    EnviarMensaje(1, robot1)
+    EnviarMensaje(2, robot2)
+    EnviarMensaje(3, robot3)
+    EnviarMensaje(4, robot4)
+    EnviarMensaje(5, robot5)
+    EnviarMensaje(6, robot6)    
+    repetir 6
+      RecibirMensaje(id, *)
+      si (id = 1)
+        RecibirMensaje(flor, robot1)
+      sino
+        si (id = 2)
+          RecibirMensaje(flor, robot2)
+        sino
+          si (id = 3)
+            RecibirMensaje(flor, robot3)
+          sino
+            si (id = 4)
+              RecibirMensaje(flor, robot4)
+            sino
+              si (id = 5)
+                RecibirMensaje(flor, robot5)
+              sino
+                RecibirMensaje(flor, robot6)
+      si (flor > maxF)
+        maxF := flor
+        maxR := id
+    Informar(maxR)
+    Informar(maxF)
+    
+  fin
+  
+variables
+  robot1: tipo1
+  robot2: tipo1
+  robot3: tipo1
+  robot4: tipo1
+  robot5: tipo1
+  robot6: tipo1
+  robot7: tipo2
+comenzar
+  AsignarArea(robot1, ciudad1)
+  AsignarArea(robot2, ciudad2)
+  AsignarArea(robot3, ciudad3)
+  AsignarArea(robot4, ciudad4)
+  AsignarArea(robot5, ciudad5)
+  AsignarArea(robot6, ciudad6)
+  AsignarArea(robot7, ciudad7)
+  Iniciar(robot1, 1, 1)
+  Iniciar(robot2, 2, 11)
+  Iniciar(robot3, 3, 21)
+  Iniciar(robot4, 4, 31)
+  Iniciar(robot5, 5, 41)
+  Iniciar(robot6, 6, 51)
+  Iniciar(robot7, 2, 1)
+fin

@@ -1,0 +1,130 @@
+programa ej04
+procesos
+
+  proceso juntarFyP(ES f:numero ; ES p:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:= f + 1
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:= p + 1
+  fin
+  
+  proceso maximo(ES max:numero ; ES maxR:numero ; E f:numero ; E p:numero ; E id:numero)
+  comenzar
+    si ( (f + p) > max)
+      max:= f + p
+      maxR:= id
+  fin
+  
+areas
+  ciudad: AreaPC(25, 25, 75, 75)
+  a1: AreaP(25, 1, 25, 1)
+  a2: AreaP(30, 1, 30, 1)
+  a3: AreaP(35, 1, 35, 1)
+  a4: AreaP(40, 1, 40, 1)
+  af: AreaP(1, 1, 1, 1)
+robots
+  robot recolector
+  variables
+    avIn, caIn, av, ca, f, p, id, gane:numero
+  comenzar
+    avIn:= PosAv
+    caIn:= PosCa
+    gane:= 0
+    id:=0
+    f:= 0
+    p:= 0
+    av:= 0
+    ca:= 0
+    RecibirMensaje(id, rf)
+    Random(av, 25, 75)
+    Random(ca, 25, 75)
+    Pos(av, ca)
+    juntarFyP(f, p)
+    EnviarMensaje(id, rf)
+    EnviarMensaje(f, rf)
+    EnviarMensaje(p, rf)
+    Pos(avIn, caIn)
+    RecibirMensaje(gane, rf)
+    si  (gane = 1)
+      Pos(50, 50)
+  fin
+  
+  robot fiscalizador
+  variables
+    n, f, p, max, maxR:numero
+  comenzar
+    max:= 0
+    repetir (10)
+      Random(n, 1, 4)
+      si (n = 1)
+        EnviarMensaje(n, r1)
+        RecibirMensaje(n, r1)
+        RecibirMensaje(f, r1)
+        RecibirMensaje(p, r1)
+      sino
+        si (n = 2)
+          EnviarMensaje(n, r2)
+          RecibirMensaje(n, r2)
+          RecibirMensaje(f, r2)
+          RecibirMensaje(p, r2)
+        sino
+          si (n = 3)
+            EnviarMensaje(n, r3)
+            RecibirMensaje(n, r3)
+            RecibirMensaje(f, r3)
+            RecibirMensaje(p, r3)
+          sino
+            EnviarMensaje(n, r4)
+            RecibirMensaje(n, r4)
+            RecibirMensaje(f, r4)
+            RecibirMensaje(p, r4)
+      maximo(max, maxR, f, p, n)
+      si (maxR = 1)
+        EnviarMensaje(1, r1)
+        EnviarMensaje(0, r2)
+        EnviarMensaje(0, r3)
+        EnviarMensaje(0, r4)
+      sino
+        si (maxR = 2)
+          EnviarMensaje(0, r1)
+          EnviarMensaje(1, r2)
+          EnviarMensaje(0, r3)
+          EnviarMensaje(0, r4)
+        sino
+          si (maxR = 3)
+            EnviarMensaje(0, r1)
+            EnviarMensaje(0, r2)
+            EnviarMensaje(1, r3)
+            EnviarMensaje(0, r4)
+          sino
+            EnviarMensaje(0, r1)
+            EnviarMensaje(0, r2)
+            EnviarMensaje(0, r3)
+            EnviarMensaje(1, r4)
+  fin
+  
+variables
+  rf: fiscalizador
+  r1: recolector
+  r2: recolector
+  r3: recolector
+  r4: recolector
+comenzar
+  AsignarArea(rf, af)
+  AsignarArea(r1, a1)
+  AsignarArea(r2, a2)
+  AsignarArea(r3, a3)
+  AsignarArea(r4, a4)
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r3, ciudad)
+  AsignarArea(r4, ciudad)
+  Iniciar(rf, 1, 1)
+  Iniciar(r1, 25, 1)
+  Iniciar(r2, 30, 1)
+  Iniciar(r3, 35, 1)
+  Iniciar(r4, 40, 1)
+fin

@@ -6,97 +6,133 @@ procesos
       derecha
   fin
   
-  proceso contarFlores(ES flor:numero)
+  proceso juntarFlores(ES f:numero)
   comenzar
     mientras HayFlorEnLaEsquina
       tomarFlor
-      flor:= flor + 1
-    mientras HayFlorEnLaBolsa
-      depositarFlor
+      f:= f + 1
   fin
   
-  proceso contarPapeles(ES papel:numero)
+  proceso juntarPapeles(ES p:numero)
   comenzar
     mientras HayPapelEnLaEsquina
       tomarPapel
-      papel:= papel + 1
-    mientras HayPapelEnLaBolsa
-      depositarPapel
+      p:= p + 1
   fin
   
-  proceso masFqueP(ES ok:boolean)
-  variables
-    flor, papel:numero
+  proceso ladoVerticalF(ES f:numero ; E lado:numero)
   comenzar
-    flor:= 0
-    papel:= 0
-    ok:= F
-    contarPapeles(papel)
-    contarFlores(flor)
-    si (flor > papel)
-      ok:= V
-  fin
-  
-  proceso hacerEscalones(ES contador:numero)
-  variables
-    ok:boolean
-    alto:numero
-  comenzar
-    contador:= 0
-    repetir 4
-      Random(alto, 1, 5)
-      repetir alto
-        masFqueP(ok)
-        si (ok)
-          contador:= contador + 1
-        mover
-      derecha
-      masFqueP(ok)
-      si (ok)
-        contador:= contador + 1
+    juntarFlores(f)
+    repetir lado
       mover
-      masFqueP(ok)
-      si (ok)
-        contador:= contador + 1
-      izquierda
+    juntarFlores(f)
+    derecha
   fin
+  
+  proceso ladoHorizontalF(ES f:numero ; E lado:numero)
+  comenzar
+    juntarFlores(f)
+    repetir lado
+      mover
+    juntarFlores(f)
+    izquierda
+  fin
+  
+  proceso hacerEscalonF(ES lado:numero ; ES flores:numero)
+  comenzar
+    ladoVerticalF(flores, lado)
+    ladoHorizontalF(flores, lado)
+    lado:= lado - 1
+  fin
+  
+  
+  proceso ladoVerticalP(ES p:numero ; E lado:numero)
+  comenzar
+    juntarPapeles(p)
+    repetir lado
+      mover
+    juntarPapeles(p)
+    izquierda
+  fin
+  
+  proceso ladoHorizontalP(ES p:numero ; E lado:numero)
+  comenzar
+    juntarPapeles(p)
+    repetir lado
+      mover
+    juntarPapeles(p)
+    derecha
+  fin
+  
+  proceso hacerEscalonP(ES lado:numero ; ES papeles:numero)
+  comenzar
+    ladoVerticalP(papeles, lado)
+    ladoHorizontalP(papeles, lado)
+    lado:= lado - 1
+  fin
+
 areas
-  ciudad1: AreaP(2, 1, 6, 20)
-  ciudad2: AreaP(7, 1, 11, 20)
-  ciudad3: AreaP(12, 1, 16, 20)
-  ciudad4: AreaP(1, 1, 1, 1)
+  area1: AreaPC(1, 1, 15, 35)
+  area2: AreaP(17, 1, 31, 35)
+  area3: AreaPC(16, 16, 16, 16)
 robots
   robot tipo1
   variables
-    cant:numero
+    lado, id, flores:numero
+    llegue:boolean
   comenzar
-    hacerEscalones(cant)
-    EnviarMensaje(cant, fiscalizador)
+    llegue:= F
+    RecibirMensaje(id, rf)
+    lado:= 5
+    repetir 4
+      hacerEscalonF(lado, flores)
+    BloquearEsquina(16, 16)
+    mover
+    Pos(PosAv + 1, PosCa)
+    llegue:= V
+    Pos(PosAv - 1, PosCa)
+    LiberarEsquina(16, 16)
   fin
   
   robot tipo2
   variables
-    total, cant:numero
+    lado, id, papeles:numero
+    llegue:boolean
   comenzar
-    total:= 0
-    repetir 3
-      RecibirMensaje(cant, *)
-      total:= total + cant
-    Informar(total)
+    llegue:= F
+    RecibirMensaje(id, rf)
+    lado:= 5
+    repetir 4
+      hacerEscalonP(lado, papeles)
+    BloquearEsquina(16, 16)
+    mover
+    Pos(PosAv - 1, PosCa)
+    llegue:= V
+    Pos(PosAv + 1, PosCa)
+    LiberarEsquina(26, 26)
+  fin
+  
+  robot fiscalizador
+  variables
+    id:numero
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    RecibirMensaje (id, *)
+    Informar(id)
   fin
   
 variables
-  robot1: tipo1
-  robot2: tipo1
-  robot3: tipo1
-  fiscalizador: tipo2
+  r1: tipo1
+  r2: tipo2
+  rf: fiscalizador
 comenzar
-  AsignarArea(robot1, ciudad1)
-  AsignarArea(robot2, ciudad2)
-  AsignarArea(robot3, ciudad3)
-  AsignarArea(fiscalizador, ciudad4)
-  Iniciar(robot1, 2, 1)
-  Iniciar(robot2, 7, 1)
-  Iniciar(robot3, 12, 1)
-  Iniciar(fiscalizador, 1, 1)
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r1, area3)
+  AsignarArea(r2, area3)
+  AsignarArea(rf, area1)
+  Iniciar(r1, 1, 1)
+  Iniciar(r2, 31, 1)
+  Iniciar(rf, 15, 1)
 fin

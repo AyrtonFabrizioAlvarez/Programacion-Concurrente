@@ -1,0 +1,135 @@
+programa tp2ej4
+procesos
+  proceso maximo(E cant:numero;ES max:numero;E num:numero;ES idMax:numero)
+  comenzar
+    si cant>max
+      max:=cant
+      idMax:=num
+  fin
+  proceso esquina(ES cant:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      cant:=cant+1
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      cant:=cant+1
+  fin 
+areas
+  aJ: AreaP(1,1,1,1)
+  a1: AreaP(25,1,25,1)
+  a2: AreaP(30,1,30,1)
+  a3: AreaP(35,1,35,1)
+  a4: AreaP(40,1,40,1)
+  aR: AreaPC(25,25,75,75)
+robots
+  robot jefe
+  variables
+    c1,c2,c3,c4,aux,id,maxCant:numero
+    ok:boolean
+  comenzar
+    c1:=0
+    c2:=0
+    c3:=0
+    c4:=0
+    maxCant:=-1
+    repetir 10
+      Random(aux,1,4)
+      si aux=1
+        EnviarMensaje(V,r1)
+        EnviarMensaje(F,r2)
+        EnviarMensaje(F,r3)
+        EnviarMensaje(F,r4)        
+        RecibirMensaje(aux,r1)
+        c1:=c1+aux
+      sino
+        si aux = 2
+          EnviarMensaje(V,r2)
+          EnviarMensaje(F,r1)
+          EnviarMensaje(F,r3)
+          EnviarMensaje(F,r4)
+          RecibirMensaje(aux,r2)
+          c2:=c2+aux
+        sino
+          si aux=3
+            EnviarMensaje(V,r3)
+            EnviarMensaje(F,r1)
+            EnviarMensaje(F,r2)
+            EnviarMensaje(F,r4)
+            RecibirMensaje(aux,r3)
+            c3:=c3+aux
+          sino
+            EnviarMensaje(V,r4)
+            EnviarMensaje(F,r1)
+            EnviarMensaje(F,r2)
+            EnviarMensaje(F,r3)
+            RecibirMensaje(aux,r4)
+            c4:=c4+aux
+    maximo(c1,maxCant,1,id)
+    maximo(c2,maxCant,2,id)
+    maximo(c3,maxCant,3,id)
+    maximo(c4,maxCant,4,id)
+    si id=1
+      EnviarMensaje(99,r1)
+      EnviarMensaje(0,r2)
+      EnviarMensaje(0,r3)
+      EnviarMensaje(0,r4)
+    sino
+      si id=2
+        EnviarMensaje(0,r1)
+        EnviarMensaje(99,r2)
+        EnviarMensaje(0,r3)
+        EnviarMensaje(0,r4)
+      sino
+        si id=3
+          EnviarMensaje(0,r1)
+          EnviarMensaje(0,r2)
+          EnviarMensaje(99,r3)
+          EnviarMensaje(0,r4)
+        sino
+          EnviarMensaje(0,r1)
+          EnviarMensaje(0,r2)
+          EnviarMensaje(0,r3)
+          EnviarMensaje(99,r4)
+  fin
+  robot recolector
+  variables
+    Ca,Av,cant,NUM,CaO,AvO:numero
+    ok:boolean
+  comenzar  
+    cant:=0
+    CaO:=PosCa
+    AvO:=PosAv
+    repetir 10
+      RecibirMensaje(ok,rJ)
+      si(ok)
+        Random(Av,25,75)
+        Random(Ca,25,75)
+        Pos(Av,Ca)
+        esquina(cant)
+        Pos(AvO,CaO)
+        EnviarMensaje(cant,rJ)
+    RecibirMensaje(NUM,rJ)
+    si NUM=99
+      Pos(50,50)  
+  fin
+variables
+  rJ:jefe
+  r1,r2,r3,r4: recolector
+comenzar
+  AsignarArea(rJ,aJ)
+  AsignarArea(r1,a1)
+  AsignarArea(r2,a2)
+  AsignarArea(r3,a3)
+  AsignarArea(r4,a4)
+  AsignarArea(r1,aR)
+  AsignarArea(r2,aR)
+  AsignarArea(r3,aR)
+  AsignarArea(r4,aR)
+  Iniciar(rJ,1,1)
+  Iniciar(r1,25,1)
+  Iniciar(r2,30,1)
+  Iniciar(r3,35,1)
+  Iniciar(r4,40,1)
+fin
+

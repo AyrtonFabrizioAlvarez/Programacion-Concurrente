@@ -38,15 +38,19 @@ robots
     p:= 0
     av:= 0
     ca:= 0
-    RecibirMensaje(id, rf)
-    Random(av, 25, 75)
-    Random(ca, 25, 75)
-    Pos(av, ca)
-    juntarFyP(f, p)
-    EnviarMensaje(id, rf)
-    EnviarMensaje(f, rf)
-    EnviarMensaje(p, rf)
-    Pos(avIn, caIn)
+    repetir 10
+      RecibirMensaje(id, rf)
+      si (id <> 0)
+        Random(av, 25, 75)
+        Random(ca, 25, 75)
+        Pos(av, ca)
+        repetir 4
+          derecha
+        juntarFyP(f, p)
+        EnviarMensaje(id, rf)
+        EnviarMensaje(f, rf)
+        EnviarMensaje(p, rf)
+        Pos(avIn, caIn)
     RecibirMensaje(gane, rf)
     si  (gane = 1)
       Pos(50, 50)
@@ -61,49 +65,61 @@ robots
       Random(n, 1, 4)
       si (n = 1)
         EnviarMensaje(n, r1)
+        EnviarMensaje(0, r2)
+        EnviarMensaje(0, r3)
+        EnviarMensaje(0, r4)
         RecibirMensaje(n, r1)
         RecibirMensaje(f, r1)
         RecibirMensaje(p, r1)
       sino
         si (n = 2)
           EnviarMensaje(n, r2)
+          EnviarMensaje(0, r1)
+          EnviarMensaje(0, r3)
+          EnviarMensaje(0, r4)
           RecibirMensaje(n, r2)
           RecibirMensaje(f, r2)
           RecibirMensaje(p, r2)
         sino
           si (n = 3)
             EnviarMensaje(n, r3)
+            EnviarMensaje(0, r1)
+            EnviarMensaje(0, r2)
+            EnviarMensaje(0, r4)
             RecibirMensaje(n, r3)
             RecibirMensaje(f, r3)
             RecibirMensaje(p, r3)
           sino
             EnviarMensaje(n, r4)
+            EnviarMensaje(0, r1)
+            EnviarMensaje(0, r2)
+            EnviarMensaje(0, r3)
             RecibirMensaje(n, r4)
             RecibirMensaje(f, r4)
             RecibirMensaje(p, r4)
       maximo(max, maxR, f, p, n)
-      si (maxR = 1)
-        EnviarMensaje(1, r1)
-        EnviarMensaje(0, r2)
+    si (maxR = 1)
+      EnviarMensaje(1, r1)
+      EnviarMensaje(0, r2)
+      EnviarMensaje(0, r3)
+      EnviarMensaje(0, r4)
+    sino
+      si (maxR = 2)
+        EnviarMensaje(0, r1)
+        EnviarMensaje(1, r2)
         EnviarMensaje(0, r3)
         EnviarMensaje(0, r4)
       sino
-        si (maxR = 2)
+        si (maxR = 3)
           EnviarMensaje(0, r1)
-          EnviarMensaje(1, r2)
-          EnviarMensaje(0, r3)
+          EnviarMensaje(0, r2)
+          EnviarMensaje(1, r3)
           EnviarMensaje(0, r4)
         sino
-          si (maxR = 3)
-            EnviarMensaje(0, r1)
-            EnviarMensaje(0, r2)
-            EnviarMensaje(1, r3)
-            EnviarMensaje(0, r4)
-          sino
-            EnviarMensaje(0, r1)
-            EnviarMensaje(0, r2)
-            EnviarMensaje(0, r3)
-            EnviarMensaje(1, r4)
+          EnviarMensaje(0, r1)
+          EnviarMensaje(0, r2)
+          EnviarMensaje(0, r3)
+          EnviarMensaje(1, r4)
   fin
   
 variables
@@ -128,3 +144,6 @@ comenzar
   Iniciar(r3, 35, 1)
   Iniciar(r4, 40, 1)
 fin
+
+
+

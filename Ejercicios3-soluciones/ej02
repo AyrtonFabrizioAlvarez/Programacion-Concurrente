@@ -1,0 +1,146 @@
+programa ej02
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarFlores(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:= f + 1
+  fin
+  proceso ladoVerticalF1(ES f:numero ; E lado:numero)
+  comenzar
+    juntarFlores(f)
+    repetir lado
+      mover
+    juntarFlores(f)
+    derecha
+  fin
+  proceso ladoHorizontalF1(ES f:numero ; E lado:numero)
+  comenzar
+    repetir lado
+      mover
+    juntarFlores(f)
+    izquierda
+  fin
+  proceso escalonF(ES f:numero ; E lado:numero)
+  comenzar
+    ladoVerticalF1(f, lado)
+    ladoHorizontalF1(f, lado)
+  fin
+  proceso juntarPapel(ES p:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:= p + 1
+  fin
+  proceso ladoVerticalP(ES p:numero ; E lado:numero)
+  comenzar
+    juntarPapel(p)
+    repetir lado
+      mover
+    juntarPapel(p)
+    izquierda
+  fin
+  proceso ladoHorizontalP(ES p:numero ; E lado:numero)
+  comenzar
+    repetir lado
+      mover
+    juntarPapel(p)
+    derecha
+  fin
+  proceso escalonP(ES p:numero ; E lado:numero)
+  comenzar
+    ladoVerticalP(p, lado)
+    ladoHorizontalP(p, lado)
+  fin
+areas
+  area1: AreaPC(1, 1, 15, 31)
+  area2: AreaP(17, 1, 31, 31)
+  area3: AreaPC(16, 16, 16, 16)
+robots
+  robot florero
+  variables
+    lado, aux, flores, id:numero
+    llegue:boolean
+  comenzar
+    RecibirMensaje(id, rf)
+    flores:= 0
+    llegue:= F
+    lado:= 5
+    repetir 4
+      escalonF(flores, lado)
+      lado:= lado - 1
+    mover
+    BloquearEsquina(16, 16)
+    Pos(PosAv + 1, PosCa)
+    llegue:= V
+    EnviarMensaje(id, rf)
+    EnviarMensaje(llegue, rf)
+    Pos(PosAv - 1, PosCa)
+    LiberarEsquina(16, 16)
+    izquierda
+    lado:= 2
+    mientras (lado <= 5)
+      escalonF(flores, lado)
+      lado:= lado + 1
+  fin
+  robot papelero
+  variables
+    papeles, lado, id:numero
+    llegue:boolean
+  comenzar
+    RecibirMensaje(id, rf)
+    llegue:= F
+    papeles:= 0
+    lado:= 5
+    repetir 4
+      escalonP(papeles, lado)
+      lado:= lado - 1
+    mover
+    BloquearEsquina(16, 16)
+    Pos(PosAv - 1, PosCa)
+    llegue:= V
+    EnviarMensaje(id, rf)
+    EnviarMensaje(llegue, rf)
+    Pos(PosAv + 1, PosCa)
+    LiberarEsquina(16, 16)
+    derecha
+    lado:= 2
+    mientras (lado <= 5)
+      escalonP(papeles, lado)
+      lado:= lado + 1
+  fin
+  robot fiscalizador
+  variables
+    id:numero
+    ok:boolean
+  comenzar
+    ok:= F
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    si (~ok)
+      RecibirMensaje(id, *)
+      RecibirMensaje(ok, *)
+      si  (id = 1)
+        Informar(id)
+      sino
+        Informar(2)
+  fin
+variables
+  r1: florero
+  r2: papelero
+  rf: fiscalizador
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r1, area3)
+  AsignarArea(r2, area3)
+  AsignarArea(rf, area1)
+  Iniciar(r1, 1, 1)
+  Iniciar(r2, 31, 1)
+  Iniciar(rf, 15, 1)
+fin

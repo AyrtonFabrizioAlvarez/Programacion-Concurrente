@@ -6,6 +6,43 @@ procesos
       max:= f
       maxId:= id
   fin
+  proceso identificarRobots
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+    EnviarMensaje(4, r4)
+  fin
+  proceso enviarDireccion
+  variables
+    av, ca:numero
+  comenzar
+    Random(av, 2, 10)
+    Random(ca, 2, 10)
+    EnviarMensaje(av, r1)
+    EnviarMensaje(ca, r1)
+    
+    EnviarMensaje(av, r2)
+    EnviarMensaje(ca, r2)
+    
+    EnviarMensaje(av, r3)
+    EnviarMensaje(ca, r3)
+    
+    EnviarMensaje(av, r4)
+    EnviarMensaje(ca, r4)
+  fin
+  proceso esquina(E av:numero ; E ca:numero ; ES flores:numero ; E avIn:numero ; E caIn:numero ; ES ok:boolean)
+  comenzar
+    BloquearEsquina(av, ca)
+    Pos(av, ca)
+    si(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores + 1
+    sino
+      ok:= F
+    Pos(avIn, caIn)
+    LiberarEsquina(av, ca)
+  fin
 areas
   area1: AreaPC(2, 2, 10, 10)
   area2: AreaP(1, 1, 1, 1)
@@ -16,65 +53,46 @@ areas
 robots
   robot fiscalizador
   variables
-    av, ca, max, maxId, id, flores:numero
+    max, maxId, id, flores:numero
   comenzar
-    max:= 0
+    identificarRobots
+    max:= -1
     maxId:= 0
-    Random(av, 2, 10)
-    Random(ca, 2, 10)
-    EnviarMensaje(1, r1)
-    EnviarMensaje(av, r1)
-    EnviarMensaje(ca, r1)
-    EnviarMensaje(2, r2)
-    EnviarMensaje(av, r2)
-    EnviarMensaje(ca, r2)
-    EnviarMensaje(3, r3)
-    EnviarMensaje(av, r3)
-    EnviarMensaje(ca, r3)
-    EnviarMensaje(4, r4)
-    EnviarMensaje(av, r4)
-    EnviarMensaje(ca, r4)
+    enviarDireccion
     repetir 4
       RecibirMensaje(id, *)
-      RecibirMensaje(flores, *)
-      maximo(max, maxId, id, flores)
-    si (maxId = 1)
-      Informar(1)
-    sino
-      si (maxId = 2)
-        Informar(2)
+      si (id = 1)
+        RecibirMensaje(flores, r1)
       sino
-        si (maxId = 3)
-          Informar(3)
+        si (id = 2)
+          RecibirMensaje(flores, r2)
         sino
-          Informar(4)
+          si (id = 3)
+            RecibirMensaje(flores, r3)
+          sino
+            RecibirMensaje(flores, r4)
+      maximo(max, maxId, id, flores)
+    Informar('Robot-Ganador', maxId)
   fin
   robot florero
   variables
     avIn, caIn, av, ca, flores, id:numero
+    hayF:boolean
   comenzar
     avIn:= PosAv
     caIn:= PosCa
+    flores:= 0
+    hayF:= V
     RecibirMensaje(id, rf)
     RecibirMensaje(av, rf)
     RecibirMensaje(ca, rf)
-    BloquearEsquina(av, ca)
-    flores:= 0
-    Pos(av, ca)
-    si(HayFlorEnLaEsquina)
-      tomarFlor
-      flores:= flores + 1
-    sino
-      EnviarMensaje(id, rf)
-      EnviarMensaje(flores, rf)
-    Pos(avIn, caIn)
-    LiberarEsquina(av, ca)
+    mientras (hayF)
+      esquina(av, ca, flores, avIn, caIn, hayF)
+    EnviarMensaje(id, rf)
+    EnviarMensaje(flores, rf)
   fin
 variables
-  r1: florero
-  r2: florero
-  r3: florero
-  r4: florero
+  r1, r2, r3, r4: florero
   rf: fiscalizador
 comenzar
   AsignarArea(r1, area1)

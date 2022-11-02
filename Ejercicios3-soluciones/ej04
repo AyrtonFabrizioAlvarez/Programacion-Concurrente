@@ -1,0 +1,103 @@
+programa ej04
+procesos
+  proceso juntarFlores
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso identificarRobots
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+    EnviarMensaje(4, r4)
+  fin
+  proceso moverFlor(E avIn:numero ; E caIn:numero)
+  comenzar
+    tomarFlor
+    BloquearEsquina(11, 11)
+    Pos(11, 11)
+    LiberarEsquina(10, 10)
+    depositarFlor
+    Pos(avIn, caIn)
+    LiberarEsquina(11, 11)
+  fin
+  proceso ultimoEnLlegar(E id:numero)
+  comenzar
+    si (id = 1)
+      Informar(1)
+    sino
+      si (id = 2)
+        Informar(2)
+      sino
+        si (id = 3)
+          Informar(3)
+        sino
+          Informar(4) 
+  fin
+areas
+  areaF: AreaP(1, 1, 1, 1)
+  area1: AreaP(9, 9, 9, 9)
+  area2: AreaP(9, 10, 9, 10)
+  area3: AreaP(9, 11, 9, 11)
+  area4: AreaP(9, 12, 9, 12)
+  areaPc: AreaPC(10, 10, 10, 10)
+  areaComp: AreaC(11, 11, 11, 11)
+robots 
+  robot fiscalizador
+  variables
+    id:numero
+    ok:boolean
+  comenzar
+    identificarRobots
+    repetir 4
+      RecibirMensaje(id, *)
+    ultimoEnLlegar(id)
+    Pos(11, 11)
+    juntarFlores
+    Pos(1, 1)
+  fin
+  robot obrero
+  variables
+    avIn, caIn, id:numero
+    termine:boolean
+  comenzar
+    RecibirMensaje(id, rf)
+    termine:= F
+    mientras(~termine)
+      avIn:= PosAv
+      caIn:= PosCa
+      BloquearEsquina(10, 10)
+      Pos(10, 10)
+      si HayFlorEnLaEsquina
+        moverFlor(avIn, caIn)
+      sino
+        termine:= V
+        Pos(avIn, caIn)
+        LiberarEsquina(10, 10)
+    EnviarMensaje(id, rf)
+  fin
+variables
+  r1, r2, r3, r4: obrero
+  rf: fiscalizador
+comenzar
+  AsignarArea(rf, areaF)
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r3, area3)
+  AsignarArea(r4, area4)
+  AsignarArea(rf, areaComp)
+  AsignarArea(r1, areaComp)
+  AsignarArea(r2, areaComp)
+  AsignarArea(r3, areaComp)
+  AsignarArea(r4, areaComp)
+  AsignarArea(r1, areaPc)
+  AsignarArea(r2, areaPc)
+  AsignarArea(r3, areaPc)
+  AsignarArea(r4, areaPc)
+  Iniciar(rf, 1, 1)
+  Iniciar(r1, 9, 9)
+  Iniciar(r2, 9, 10)
+  Iniciar(r3, 9, 11)
+  Iniciar(r4, 9, 12)
+fin

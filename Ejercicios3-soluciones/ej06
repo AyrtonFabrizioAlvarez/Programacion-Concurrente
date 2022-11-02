@@ -1,0 +1,198 @@
+programa ej06
+procesos
+  proceso juntarFlores(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor 
+      f:= f + 1
+  fin
+  proceso juntarPapeles(ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      papel:= papel + 1
+  fin
+  proceso juntarFyP(ES f:numero ; ES p:numero)
+  comenzar
+    juntarFlores(f)
+    juntarPapeles(p)
+  fin
+  proceso medioPerimetroF1(E lado:numero ; ES f:numero)
+  comenzar
+    repetir 2
+      repetir lado
+        juntarFlores(f)
+        si ((PosAv+1 = 5)&(PosCa = 8))
+          juntarFlores(f)
+          BloquearEsquina(PosAv+1, PosCa)
+          mover
+          repetir 4
+            derecha
+          juntarFlores(f)
+          mover
+          LiberarEsquina(PosAv - 1, PosCa)
+          lado:= lado - 1
+        sino
+          mover
+      juntarFlores(f)
+      derecha
+  fin
+  proceso medioPerimetroF2(E lado:numero ; ES f:numero)
+  comenzar
+    lado:= lado - 1
+    repetir 2
+      repetir lado
+        juntarFlores(f)
+        si ((PosAv = 8)&(PosCa - 1 = 5))
+          juntarFlores(f)
+          BloquearEsquina(PosAv, PosCa - 1)
+          mover
+          repetir 4
+            derecha
+          juntarFlores(f)
+          mover
+          LiberarEsquina(PosAv, PosCa + 1)
+        sino
+          mover
+      lado:= lado + 1
+      juntarFlores(f)
+      derecha
+  fin
+  proceso recorrerPerimetroF(E lado:numero ; ES f:numero)
+  comenzar
+    medioPerimetroF1(lado, f)
+    medioPerimetroF2(lado, f)
+  fin
+  proceso medioPerimetroFyP1(E lado:numero ; ES f:numero ; ES p:numero)
+  comenzar
+    repetir 2
+      repetir lado - 1
+        juntarFyP(f, p)
+        si ((PosAv = 5)&(PosCa+1 = 8))
+          BloquearEsquina(PosAv, PosCa + 1)
+          mover
+          juntarFyP(f, p)
+          mover
+          LiberarEsquina(PosAv, PosCa - 1)
+        sino
+          si ((PosAv+1 = 9)&(PosCa = 15))
+            BloquearEsquina(PosAv + 1, PosCa)
+            mover
+            repetir 4
+              derecha
+            juntarFyP(f, p)
+            mover
+            LiberarEsquina(PosAv - 1, PosCa)
+          sino
+            mover
+      juntarFyP(f, p)
+      derecha
+  fin
+  proceso medioPerimetroFyP2(E lado:numero ; ES f:numero ; ES p:numero)
+  comenzar
+    repetir 2
+      repetir lado
+        juntarFyP(f, p)
+        si ( (PosAv = 15)&(PosCa - 1 = 9) )
+          BloquearEsquina(PosAv, PosCa - 1)
+          mover
+          repetir 4
+            derecha
+          juntarFyP(f, p)
+          mover
+          LiberarEsquina(PosAv, PosCa + 1)
+        si ( (PosAv - 1 = 9)&(PosCa = 5) )
+          BloquearEsquina(PosAv - 1, PosCa)
+          mover
+          repetir 4
+            derecha
+          juntarFyP(f, p)
+          mover
+          LiberarEsquina(PosAv + 1, PosCa)
+        sino
+          mover
+      juntarFyP(f, p)
+      derecha
+  fin
+  proceso recorrerPerimetroFyP(E lado:numero ; ES f:numero ; ES p:numero)
+  comenzar
+    medioPerimetroFyP1(lado, f, p)
+    medioPerimetroFyP2(lado, f, p)
+  fin
+  proceso medioPerimetroP1(E lado:numero ; ES p:numero)
+  comenzar
+    repetir 2
+      repetir lado - 1
+        juntarPapeles(p)
+        si ((PosAv = 9)&(PosCa+1 = 15))
+          juntarPapeles(p)
+          BloquearEsquina(PosAv, PosCa + 1)
+          mover
+          repetir 4
+            derecha
+          juntarPapeles(p)
+          mover
+          LiberarEsquina(PosAv, PosCa - 1)
+        sino
+          mover
+      juntarPapeles(p)
+      derecha
+      
+  fin
+  proceso medioPerimetroP2(E lado:numero ; ES p:numero)
+  comenzar
+    repetir 2
+      repetir lado
+        juntarPapeles(p)
+        si ((PosAv = 5)&(PosCa = 8))
+          juntarPapeles(p)
+          BloquearEsquina(PosAv+1, PosCa)
+          mover
+          repetir 4
+            derecha
+          juntarPapeles(p)
+          mover
+          LiberarEsquina(PosAv - 1, PosCa)
+        sino
+          mover
+    juntarPapeles(p)
+    derecha
+  fin
+  proceso recorrerPerimetroP(E lado:numero ; ES p:numero)
+  comenzar
+    medioPerimetroP1(lado, p)
+    medioPerimetroP2(lado, p)
+  fin
+areas
+  area1: AreaC(2, 2, 16, 16)
+robots
+  robot tipo1
+  variables
+    flores:numero
+  comenzar
+    recorrerPerimetroF(6, flores)
+  fin
+  robot tipo2
+  variables
+    flores, papeles:numero
+  comenzar
+    recorrerPerimetroFyP(10, flores, papeles)
+  fin
+  robot tipo3
+  variables
+    papeles:numero
+  comenzar
+    recorrerPerimetroP(7, papeles)
+  fin
+variables
+  r1: tipo1
+  r2: tipo2
+  r3: tipo3
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area1)
+  AsignarArea(r3, area1)
+  Iniciar(r1, 2, 2)
+  Iniciar(r2, 5, 5)
+  Iniciar(r3, 9, 9)
+fin

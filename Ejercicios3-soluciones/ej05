@@ -56,6 +56,10 @@ robots
       Pos(av, ca)
       LiberarEsquina(11, 11)
       depositarPapel
+    sino
+      Pos(av, ca)
+      LiberarEsquina(11, 11)
+      hay:= F
     EnviarMensaje(id, rf)
     EnviarMensaje(ca, rf)
   fin

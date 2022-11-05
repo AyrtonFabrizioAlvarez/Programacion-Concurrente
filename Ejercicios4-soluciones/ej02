@@ -1,0 +1,110 @@
+programa ej02
+procesos
+  proceso juntarPapeles(ES p:numero)
+  comenzar
+    mientras ( (HayPapelEnLaEsquina) & (p < 5) )
+      tomarPapel
+      p:= p + 1
+  fin
+  proceso dejarPapeles
+  variables
+    avIn, caIn:numero
+  comenzar
+    avIn:= PosAv
+    caIn:= PosCa
+    BloquearEsquina(50, 50)
+    Pos(50, 50)
+    repetir 5
+      depositarPapel
+    Pos(avIn, caIn)
+    LiberarEsquina(50, 50)
+  fin
+  proceso recorrerAvenida(ES p:numero)
+  comenzar
+    repetir 99
+      mientras (HayPapelEnLaEsquina)
+        juntarPapeles(p)
+        si (p = 5)
+          dejarPapeles
+          p:= 0
+      mover
+    mientras (HayPapelEnLaEsquina)
+      juntarPapeles(p)
+      si (p = 5)
+        dejarPapeles
+        p:= 0
+  fin
+  proceso contarPapeles(ES n:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      n:= n + 1
+    repetir n
+      depositarPapel
+  fin
+  proceso juntarNpapeles(E n:numero)
+  comenzar
+    repetir n
+      tomarPapel
+  fin
+  proceso dejarNpapeles(E n:numero)
+  comenzar
+    repetir n
+      depositarPapel
+  fin
+areas
+  area1: AreaP(5, 1, 5, 100)
+  area2: AreaP(10, 1, 10, 100)
+  area3: AreaP(11, 1, 11, 1)
+  area4: AreaP(12, 1, 12, 1)
+  area5: AreaC(50, 50, 50, 50)
+robots
+  robot productor
+  variables
+    papeles:numero
+  comenzar
+    papeles:= 0
+    recorrerAvenida(papeles)
+  fin
+  
+  robot consumidor
+  variables
+    avIn, caIn, papeles, n, noHay:numero
+  comenzar
+    avIn:= PosAv
+    caIn:= PosCa
+    papeles:= 0
+    noHay:= 0
+    mientras (noHay < 8)
+      Random(papeles, 2, 5)
+      n:= 0
+      BloquearEsquina(50, 50)
+      Pos(50, 50)    
+      contarPapeles(n)
+      si (n >= papeles)
+        juntarNpapeles(papeles)
+        Pos(avIn, caIn)
+        LiberarEsquina(50, 50)
+        dejarNpapeles(papeles)
+      sino
+        Pos(avIn, caIn)
+        LiberarEsquina(50, 50)
+        noHay:= noHay + 1
+  fin
+variables
+  p1, p2: productor
+  c1, c2: consumidor
+comenzar
+  AsignarArea(p1, area1)  
+  AsignarArea(p2, area2)
+  AsignarArea(c1, area3)
+  AsignarArea(c2, area4)
+  AsignarArea(p1, area5)
+  AsignarArea(p2, area5)
+  AsignarArea(c1, area5)
+  AsignarArea(c2, area5)
+  Iniciar(p1, 5, 1)
+  Iniciar(p2, 10, 1)
+  Iniciar(c1, 11, 1)
+  Iniciar(c2, 12, 1)
+fin

@@ -33,18 +33,16 @@ areas
 robots
   robot cliente
   variables
-    id, av, caSig, avAnt, caAnt, flores, corte:numero
+    id, av, caSig, avAnt, caAnt, flores:numero
     ok:boolean
   comenzar
     ok:= F
-    corte:= 1
     RecibirMensaje(id, serv)
     mientras (PosCa < 10)
       av:= PosAv
       caSig:= PosCa + 1
       Random(flores, 1, 4)
       EnviarMensaje(id, serv)
-      EnviarMensaje(corte, serv)
       EnviarMensaje(flores, serv)
       EnviarMensaje(av, serv)
       EnviarMensaje(caSig, serv)
@@ -57,6 +55,7 @@ robots
         Pos(avAnt, caAnt)
         avanzoDejandoFlores(flores)
     id:= 0
+    EnviarMensaje(id, serv)
   fin
   
   robot servidor

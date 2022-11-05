@@ -1,0 +1,92 @@
+programa ej03
+procesos
+  proceso identificarRobots
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+  fin
+  proceso juntarPapeles
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso unaEtapa
+  comenzar
+    repetir 4
+      juntarPapeles
+      mover
+  fin
+  proceso informarFinEtapa(ES ok:boolean)
+  comenzar
+    si (PosAv = 1)
+      ok:= V
+      EnviarMensaje(ok, r2)
+      EnviarMensaje(ok, r3)
+    sino
+      si (PosAv = 2)
+        ok:= V
+        EnviarMensaje(ok, r1)
+        EnviarMensaje(ok, r3)
+      sino
+        ok:= V
+        EnviarMensaje(ok, r1)
+        EnviarMensaje(ok, r2)
+  fin
+areas
+  area1: AreaP(1, 1, 1, 100)
+  area2: AreaP(2, 1, 2, 100)
+  area3: AreaP(3, 1, 3, 100)
+  area4: AreaP(4, 1, 4, 1)
+robots
+  robot fiscalizador
+  variables
+    id:numero
+  comenzar
+    identificarRobots
+  fin
+  
+  robot obrero
+  variables
+    id:numero
+    ok:boolean
+  comenzar
+    RecibirMensaje(id, rf)
+    repetir 24
+      ok:= F
+      unaEtapa
+      informarFinEtapa(ok)
+      si (PosAv = 1)
+        RecibirMensaje(id, *)
+        si (id = 2)
+          RecibirMensaje(ok, r2)
+        sino
+          RecibirMensaje(ok, r3)
+      sino
+        si (PosAv = 2)
+          RecibirMensaje(id, *)
+          si (id = 1)
+            RecibirMensaje(ok, r1)
+          sino
+            RecibirMensaje(ok, r3)
+        sino
+          RecibirMensaje(id, *)
+          si (id = 1)
+            RecibirMensaje(ok, r1)
+          sino
+            RecibirMensaje(ok, r2)
+    unaEtapa
+  fin
+variables
+  r1, r2, r3: obrero
+  rf: fiscalizador
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r3, area3)
+  AsignarArea(rf, area4)
+  Iniciar(r1, 1, 1)
+  Iniciar(r2, 2, 1)
+  Iniciar(r3, 3, 1)
+  Iniciar(rf, 4, 1)
+fin

@@ -1,0 +1,124 @@
+programa parcial1
+procesos
+  proceso identificarRobots
+  comenzar
+    EnviarMensaje(1, j1)
+    EnviarMensaje(2, j2)
+    EnviarMensaje(3, j3)
+  fin
+  proceso juntarPapeles (ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:= p + 1
+  fin
+  proceso recorrer (E pasos:numero ; ES p:numero)
+  comenzar
+    repetir (pasos - 1)
+      juntarPapeles(p)
+      si (PosCa < 40)
+        mover
+        repetir 4
+          derecha
+    juntarPapeles(p)
+  fin
+  proceso recorrerJ1(E pasos:numero ; ES p:numero)
+  comenzar
+    repetir (pasos - 1)
+      si (PosCa+1 = 30)
+        BloquearEsquina(1, 30)
+        mover
+        juntarPapeles(p)
+        mover
+        LiberarEsquina(1, 30)
+      sino
+        juntarPapeles(p)
+        mover
+      juntarPapeles(p)
+  fin
+  proceso dejarPapeles(E p:numero)
+  comenzar
+    repetir p
+      depositarPapel
+  fin  
+  proceso maximo(E id:numero ; E pasos:numero ; ES max:numero ; ES maxR:numero)
+  comenzar
+    si (pasos > max)
+      max:= pasos
+      maxR:= id
+  fin
+areas
+  area: AreaC(1, 1, 21, 40)
+  areaFisc: AreaP(25, 1, 25, 1) 
+robots
+  robot jugador
+  variables
+    id, av, ca, avIn, caIn, pasos, n, papeles:numero
+  comenzar
+    RecibirMensaje(id, rf)
+    RecibirMensaje(av, rf)
+    RecibirMensaje(ca, rf)
+    pasos:= 0
+    avIn:= PosAv
+    caIn:= PosCa
+    Pos(av, ca)
+    repetir 5
+      Random(n, 1, 10)
+      pasos:= pasos + n
+      si (av = 1)
+        recorrerJ1(n, papeles)
+      recorrer(n, papeles)
+    EnviarMensaje(id, rf)
+    EnviarMensaje(pasos, rf)
+    BloquearEsquina(1, 30)
+    Pos(1, 30)
+    dejarPapeles(papeles)
+    Pos(avIn, caIn)
+    LiberarEsquina(1, 30)
+    Informar('di', pasos)
+  fin
+  robot fiscalizador
+  variables
+    av, ca, id, max, maxR, pasos:numero
+  comenzar
+    identificarRobots
+    max:= -1
+    maxR:= -1
+    repetir 3
+      Random(av, 1, 7)
+      Random(ca, 1, 40)
+      EnviarMensaje(av, j1)
+      EnviarMensaje(ca, j1)
+      Random(av, 8, 14)
+      Random(ca, 1, 40)
+      EnviarMensaje(av, j2)
+      EnviarMensaje(ca, j2)
+      Random(av, 15, 21)
+      Random(ca, 1, 40)
+      EnviarMensaje(av, j3)
+      EnviarMensaje(ca, j3)      
+    repetir 3
+      RecibirMensaje(id, *)
+      si (id = 1)
+        RecibirMensaje(pasos, j1)
+      sino
+        si (id = 2)
+          RecibirMensaje(pasos, j2)
+        sino
+          RecibirMensaje(pasos, j3)
+      maximo(id, pasos, max, maxR)
+    Informar('El-jugador-que-llego-mas-lejos-es', maxR)
+  fin
+variables
+  j1, j2, j3: jugador
+  rf: fiscalizador  
+comenzar
+  AsignarArea(j1, area)
+  AsignarArea(j2, area)
+  AsignarArea(j3, area)
+  AsignarArea(rf, areaFisc)
+  Iniciar(j1, 1, 1)
+  Iniciar(j2, 8, 1)
+  Iniciar(j3, 15, 1)
+  Iniciar(rf, 25, 1)
+fin

@@ -1,0 +1,194 @@
+programa repaso4
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+
+  proceso juntarP(ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:=p+1
+  fin
+
+  proceso ladoVert1F(ES f:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv,PosCa+1)
+      mover
+      LiberarEsquina(PosAv,PosCa -1)
+      juntarF(f)
+  fin
+
+  proceso ladoHor1F(ES f:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv+1,PosCa)
+      mover
+      LiberarEsquina(PosAv -1,PosCa)
+      juntarF(f)
+  fin
+
+  proceso ladoVert2F(ES f:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv,PosCa -1)
+      mover
+      LiberarEsquina(PosAv,PosCa+1)
+      juntarF(f)
+  fin
+
+  proceso ladoHor2F(ES f:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv -1,PosCa)
+      mover
+      LiberarEsquina(PosAv+1,PosCa)
+      juntarF(f)
+  fin
+
+  proceso cuadradoF(ES f:numero)
+  comenzar
+    BloquearEsquina(PosAv,PosCa)
+    ladoVert1F(f)
+    derecha
+    ladoHor1F(f)
+    derecha
+    ladoVert2F(f)
+    derecha
+    ladoHor2F(f)
+    LiberarEsquina(PosAv,PosCa)
+  fin
+
+  proceso ladoVert1P(ES p:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv,PosCa -1)
+      mover
+      LiberarEsquina(PosAv,PosCa+1)
+      juntarP(p)
+  fin
+
+  proceso ladoHor1P(ES p:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv -1,PosCa)
+      mover
+      LiberarEsquina(PosAv+1,PosCa)
+      juntarP(p)
+  fin
+
+  proceso ladoVert2P(ES p:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv,PosCa+1)
+      mover
+      LiberarEsquina(PosAv,PosCa -1)
+      juntarP(p)
+  fin
+
+  proceso ladoHor2P(ES p:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv+1,PosCa)
+      mover
+      LiberarEsquina(PosAv -1,PosCa)
+      juntarP(p)
+  fin
+  proceso cuadradoP(ES p:numero)
+  comenzar
+    BloquearEsquina(PosAv,PosCa)
+    repetir 2
+      derecha
+    ladoVert1P(p)
+    derecha
+    ladoHor1P(p)
+    derecha
+    ladoVert2P(p)
+    derecha
+    ladoHor2P(p)
+    LiberarEsquina(PosAv,PosCa)
+  fin
+
+  proceso enviarID
+  comenzar
+    EnviarMensaje(1,f1)
+    EnviarMensaje(2,f2)
+    EnviarMensaje(11,p1)
+    EnviarMensaje(12,p2)
+  fin
+
+areas
+  cuad1:AreaPC(3,3,13,13)
+  cuad2:AreaPC(16,3,26,13)
+  esqJ:AreaP(14,6,14,6)
+
+robots
+  robot florero
+  variables
+    f,id:numero
+  comenzar
+    f:=0
+    cuadradoF(f)
+    RecibirMensaje(id,rJ)
+    EnviarMensaje(id,rJ)
+    EnviarMensaje(f,rJ)
+  fin
+
+  robot papelero
+  variables
+    p,id:numero
+  comenzar
+    p:=0
+    cuadradoP(p)
+    RecibirMensaje(id,rJ)
+    EnviarMensaje(id,rJ)
+    EnviarMensaje(p,rJ)
+  fin
+
+  robot jefe
+  variables
+    cant,id,aux:numero
+  comenzar
+    enviarID
+    cant:=0
+    repetir 4
+      RecibirMensaje(id,*)
+      si(id<10)
+        si(id=1)
+          RecibirMensaje(aux,f1)
+        sino
+          RecibirMensaje(aux,f2)
+      sino
+        si(id=11)
+          RecibirMensaje(aux,p1)
+        sino
+          RecibirMensaje(aux,p2)
+      cant:=cant+aux
+    si(id=11)|(id=12)
+      Informar('ganaron_los_floreros',1)
+    sino
+      Informar('ganaron_los_papeleros',2)
+    Informar('cantidad_juntada',cant)
+  fin
+
+variables
+  p1,p2:papelero
+  f1,f2:florero
+  rJ:jefe
+
+comenzar
+  AsignarArea(p1,cuad1)
+  AsignarArea(f1,cuad1)
+  AsignarArea(p2,cuad2)
+  AsignarArea(f2,cuad2)
+  AsignarArea(rJ,esqJ)
+  Iniciar(p1,13,13)
+  Iniciar(f1,3,3)
+  Iniciar(p2,26,13)
+  Iniciar(f2,16,3)
+  Iniciar(rJ,14,6)
+fin

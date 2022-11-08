@@ -1,0 +1,181 @@
+programa parcial2
+procesos
+  proceso identificarRobots
+  comenzar
+    EnviarMensaje(1, f1)
+    EnviarMensaje(2, f2)
+    EnviarMensaje(3, p1)
+    EnviarMensaje(4, p2)
+  fin
+  proceso juntarFlores (ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:= f + 1
+  fin
+  proceso juntarPapeles(ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:= p + 1
+  fin
+  proceso hacerCuadradoF(ES f:numero)
+  comenzar
+    BloquearEsquina(PosAv, PosCa)
+    hacerLadoSubiendoF(f)
+    derecha
+    hacerLadoDerechaF(f)
+    derecha
+    hacerLadoBajandoF(f)
+    derecha
+    hacerLadoIzquierdaF(f)
+  fin
+  proceso hacerLadoSubiendoF(ES f:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv, PosCa + 1)
+      mover
+      juntarFlores(f)
+      LiberarEsquina(PosAv, PosCa - 1)
+  fin
+  proceso hacerLadoDerechaF(ES f:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv + 1, PosCa)
+      mover
+      juntarFlores(f)
+      LiberarEsquina(PosAv - 1, PosCa)
+  fin
+  proceso hacerLadoBajandoF(ES f:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv, PosCa - 1)
+      mover
+      juntarFlores(f)
+      LiberarEsquina(PosAv, PosCa + 1)
+  fin
+  proceso hacerLadoIzquierdaF(ES f:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv - 1, PosCa)
+      mover
+      juntarFlores(f)
+      LiberarEsquina(PosAv + 1, PosCa)
+  fin
+  proceso hacerCuadradoP(ES p:numero)
+  comenzar
+    repetir 2
+      derecha
+    BloquearEsquina(PosAv, PosCa)
+    hacerLadoBajandoP(p)
+    derecha
+    hacerLadoIzquierdaP(p)
+    derecha
+    hacerLadoSubiendoP(p)
+    derecha
+    hacerLadoDerechaP(p)
+  fin
+  proceso hacerLadoSubiendoP(ES p:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv, PosCa + 1)
+      mover
+      juntarPapeles(p)
+      LiberarEsquina(PosAv, PosCa - 1)
+  fin
+  proceso hacerLadoDerechaP(ES p:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv + 1, PosCa)
+      mover
+      juntarPapeles(p)
+      LiberarEsquina(PosAv - 1, PosCa)
+  fin
+  proceso hacerLadoBajandoP(ES p:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv, PosCa - 1)
+      mover
+      juntarPapeles(p)
+      LiberarEsquina(PosAv, PosCa + 1)
+  fin
+  proceso hacerLadoIzquierdaP(ES p:numero)
+  comenzar
+    repetir 10
+      BloquearEsquina(PosAv - 1, PosCa)
+      mover
+      juntarPapeles(p)
+      LiberarEsquina(PosAv + 1, PosCa)
+  fin
+areas
+  cuadrado1: AreaPC(3, 3, 13, 13)
+  cuadrado2: AreaPC(16, 3, 26, 13)
+  areaJefe: AreaP(14, 6, 14, 6)
+robots
+  robot florero
+  variables
+    id, flores:numero
+  comenzar
+    RecibirMensaje(id, rf)
+    hacerCuadradoF(flores)
+    EnviarMensaje(id, rf)
+    EnviarMensaje(flores, rf)
+  fin
+  robot papelero
+  variables
+    id, papeles:numero
+  comenzar
+    RecibirMensaje(id, rf)
+    hacerCuadradoP(papeles)
+    EnviarMensaje(id, rf)
+    EnviarMensaje(papeles, rf)
+  fin
+  robot fiscalizador
+  variables
+    equipoF, equipoP, id, flores, papeles, n:numero
+  comenzar
+    flores:= 0
+    equipoF:= 0
+    papeles:= 0
+    equipoP:= 0
+    identificarRobots
+    repetir 4
+      RecibirMensaje(id, *)
+      si ( (id = 1) | (id = 2) )
+        si (id = 1)
+          RecibirMensaje(n, f1)
+          flores:= flores + n
+        sino
+          RecibirMensaje(n, f2)
+          flores:= flores + n
+      sino
+        si (id = 3)
+          RecibirMensaje(n, p1)
+          papeles:= papeles + n
+        sino
+          RecibirMensaje(n, p2)
+          papeles:= papeles + n
+    si ( (id = 1) | (id = 2) )
+      Informar('El-equipo-ganador-es-team-papeleros', 2)
+    sino
+      Informar('El-equipo-ganador-es-team-floreros', 1)
+    Informar('Total-de-Flores', flores)
+    Informar('Total-de-Papeles', papeles)
+    Informar('Total-de-elementos-', flores+papeles)
+  fin
+variables
+  f1, f2: florero
+  p1, p2: papelero
+  rf: fiscalizador
+comenzar
+  AsignarArea(f1, cuadrado1)
+  AsignarArea(p1, cuadrado1)
+  AsignarArea(f2, cuadrado2)
+  AsignarArea(p2, cuadrado2)
+  AsignarArea(rf, areaJefe)
+  Iniciar(f1, 3, 3)
+  Iniciar(p1, 13, 13)
+  Iniciar(f2, 16, 3)
+  Iniciar(p2, 26, 13)
+  Iniciar(rf, 14, 6)
+fin

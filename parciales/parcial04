@@ -1,0 +1,162 @@
+programa Parcial2022
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarF(ES f: numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso depositarF(ES f: numero)
+  comenzar
+    repetir f
+      depositarFlor
+  fin
+  proceso bloquearCa(ES f:numero)
+  variables
+    ca:numero
+  comenzar
+    ca:=PosCa
+    BloquearEsquina(PosAv,20)
+    Pos(PosAv,20)
+    depositarF(f)
+    f:=0
+    Pos(PosAv,ca)
+    LiberarEsquina(PosAv,20)
+  fin
+  proceso max(ES f:numero;ES fM:numero;ES id:numero;ES idM:numero)
+  comenzar
+    si f>fM
+      fM:=f
+      idM:=id
+  fin
+  proceso irEsquina20(E f:numero;E id:numero)
+  variables
+    avi:numero  
+  comenzar
+    avi:=PosAv
+    BloquearEsquina(20,20)
+    mover
+    depositarF(f)
+    Pos(avi,PosCa)
+    LiberarEsquina(20,20)
+    EnviarMensaje(id,rj)
+    EnviarMensaje(f,rj)
+
+  fin
+areas
+  ai: AreaPC(9,19,19,21)
+  aii: AreaPC(21,19,31,21)
+  depo: AreaPC(20,20,20,20)
+  aj: AreaP(20,18,20,18)
+  
+robots
+  robot lateralIzquierdo
+  variables
+    id,f,ok:numero
+  comenzar
+    f:=0
+    derecha
+    repetir 10
+      mover
+      si HayFlorEnLaEsquina
+        juntarF(f)
+        bloquearCa(f)
+      EnviarMensaje(1,ic)
+  fin
+  robot centralIzquierdo
+  variables
+    id,f,avi,ok:numero
+  comenzar
+    f:=0
+    derecha    
+    repetir 10
+      RecibirMensaje(ok,ii)
+      RecibirMensaje(ok,iii)
+      mover
+      juntarF(f)
+    irEsquina20(f,1)
+  fin
+  
+  robot lateralDerecho
+  variables
+    id,f,ok:numero
+  comenzar
+    f:=0
+    izquierda
+    repetir 10      
+      mover
+      si HayFlorEnLaEsquina
+        juntarF(f)
+        bloquearCa(f)
+      EnviarMensaje(1,dc)
+  fin
+  robot centralDerecho
+  variables
+    id,f,avi,ok:numero
+  comenzar
+    f:=0
+    izquierda
+    repetir 10
+      RecibirMensaje(ok,di)
+      RecibirMensaje(ok,dii)
+      mover
+      juntarF(f)
+    irEsquina20(f,2)
+  fin
+  robot jefe
+  variables
+    id,idM,f,fM:numero
+  comenzar
+    fM:=-1
+    idM:=0
+    repetir 2
+      RecibirMensaje(id,*)
+      si id=1
+        RecibirMensaje(f,ic)
+      sino
+        RecibirMensaje(f,dc)
+      max(f,fM,id,idM)
+    si id=2  
+      Informar('LLegoPrimeroEl',1)
+    sino
+      Informar('LLegoPrimeroEl',2)
+    si idM=1  
+      Informar('ElQueJuntoMasFloresFueEquipo',1)
+    sino
+      Informar('ElQueJuntoMasFloresFueEquipo',2)
+  fin
+variables
+  ii,iii: lateralIzquierdo
+  di,dii: lateralDerecho
+  ic: centralIzquierdo
+  dc: centralDerecho
+  rj:jefe
+comenzar
+  AsignarArea(ii,ai)
+  AsignarArea(iii,ai)
+  AsignarArea(ic,ai)
+  AsignarArea(di,aii)
+  AsignarArea(dii,aii)
+  AsignarArea(dc,aii)
+  AsignarArea(ic,depo)
+  AsignarArea(dc,depo)
+  AsignarArea(rj,aj)
+  Iniciar(ii,9,21)
+  Iniciar(ic,9,20)
+  Iniciar(iii,9,19)
+  Iniciar(di,31,21)
+  Iniciar(dc,31,20)
+  Iniciar(dii,31,19)
+  Iniciar(rj,20,18)
+fin
+
+
+
+
+
+

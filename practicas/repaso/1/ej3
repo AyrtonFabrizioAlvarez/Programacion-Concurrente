@@ -1,0 +1,85 @@
+programa ej3
+
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  
+  proceso dejarPapeles(ES x:numero)
+  comenzar
+    repetir x
+      depositarPapel
+  fin
+  
+  proceso dejarFlores(ES x:numero)
+  comenzar
+    repetir x
+      depositarFlor
+  fin
+  
+  proceso analizarEsquina(ES f:numero ; ES p:numero)
+  comenzar
+    si HayPapelEnLaEsquina
+      mientras HayPapelEnLaEsquina
+        tomarPapel
+        p:= p + 1
+      dejarPapeles(p)
+    si HayFlorEnLaEsquina
+      mientras HayFlorEnLaEsquina
+        tomarFlor
+        f:= f + 1
+      dejarFlores(f)
+  fin
+  
+  proceso hacerEscalon(E lado:numero ; ES f:numero ; ES p:numero ; ES escalones:numero)
+  comenzar
+    repetir lado
+      analizarEsquina(f, p)
+      mover
+    derecha
+    repetir lado
+      analizarEsquina(f, p)
+      mover
+    izquierda
+    si (f+1 = p)
+      escalones:= escalones + 1
+  fin
+  
+  proceso hacerEscalones(E lado:numero ; ES f:numero ; ES p:numero ; ES escalones:numero)
+  comenzar
+    repetir 4
+      f:= 0
+      p:= 0
+      hacerEscalon(lado, f, p, escalones)
+      lado:= lado + 1
+  fin
+  
+areas
+  ciudad1: AreaC(12, 6, 32, 24)
+robots
+  robot tipo1
+  variables
+    lado:numero
+    f:numero
+    p:numero
+    escalones:numero
+  comenzar
+    lado:= 1
+    escalones:= 0
+    hacerEscalones(lado, f, p, escalones)
+    Informar('escalones-que-cumplen', escalones)
+  fin
+variables
+  r1: tipo1
+  r2: tipo1
+  r3: tipo1
+comenzar
+  AsignarArea(r1, ciudad1)
+  AsignarArea(r2, ciudad1)
+  AsignarArea(r3, ciudad1)
+  Iniciar(r1, 12, 14)
+  Iniciar(r2, 17, 10)
+  Iniciar(r3, 22, 6)
+fin

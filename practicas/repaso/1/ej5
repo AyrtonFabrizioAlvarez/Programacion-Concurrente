@@ -1,0 +1,82 @@
+programa ej5
+
+procesos
+  proceso juntarFlores(ES f:numero)
+  comenzar
+    si HayFlorEnLaEsquina
+      mientras HayFlorEnLaEsquina
+        tomarFlor
+        f:= f + 1
+  fin
+  proceso dejarFlores(E f:numero)
+  comenzar
+    repetir f
+      depositarFlor
+  fin
+  proceso hacerLadoFlores(ES f:numero)
+  comenzar
+    repetir 19
+      juntarFlores(f)
+      mover
+  fin
+  
+  proceso juntarPapeles(ES p:numero)
+  comenzar
+    si HayPapelEnLaEsquina
+      mientras HayPapelEnLaEsquina
+        tomarPapel
+        p:= p + 1
+  fin
+  proceso dejarPapeles(E p:numero)
+  comenzar
+    repetir p
+      depositarPapel
+  fin
+  proceso hacerLadoPapeles(ES p:numero)
+  comenzar
+    repetir 19
+      juntarPapeles(p)
+      mover
+  fin
+areas
+  ciudad1: AreaP(1, 75, 20, 80)
+  ciudad2: AreaP(75, 80, 80, 99)
+  ciudad3: AreaP(80, 10, 99, 15)
+  ciudad4: AreaP(10, 1, 15, 20)
+robots
+  robot florero
+  variables
+    f:numero
+  comenzar
+    derecha
+    hacerLadoFlores(f)
+    Pos(PosAv - 19, PosCa - 5)
+    hacerLadoFlores(f)
+    dejarFlores(f)
+  fin
+  
+  robot papelero
+  variables
+    p:numero
+  comenzar
+    hacerLadoPapeles(p)
+    Pos(PosAv+5, PosCa - 19)
+    hacerLadoPapeles(p)
+    Pos(PosAv - 5, PosCa)
+    dejarPapeles(p)
+  fin
+variables
+  r1: florero
+  r2: papelero
+  r3: florero
+  r4: papelero
+comenzar
+  AsignarArea(r1, ciudad1)
+  AsignarArea(r2, ciudad2)
+  AsignarArea(r3, ciudad3)
+  AsignarArea(r4, ciudad4)
+  Iniciar(r1, 1, 80)
+  Iniciar(r2, 75, 80)
+  Iniciar(r3, 80, 15)
+  Iniciar(r4, 10, 1)
+fin

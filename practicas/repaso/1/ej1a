@@ -1,0 +1,50 @@
+programa ej1a
+procesos
+  proceso evaluarEsquina(ES flores:numero ; ES vacias:numero)
+  comenzar
+    si HayFlorEnLaEsquina
+      mientras HayFlorEnLaEsquina
+        tomarFlor
+        flores:= flores + 1
+    sino
+      vacias:= vacias + 1
+  fin
+  proceso depositarFlores(E f:numero)
+  comenzar
+    repetir f
+      depositarFlor
+  fin
+  proceso recorrerAvenida(ES flores:numero ; ES vacias:numero)
+  comenzar
+    repetir 99
+      evaluarEsquina(flores, vacias)
+      mover
+    evaluarEsquina(flores, vacias)
+  fin
+areas
+  ciudad1: AreaP(1, 1, 5, 100)
+robots
+  robot tipo1
+  variables
+    f:numero
+    vacias:numero
+  comenzar
+    repetir 2
+      f:= 0
+      vacias:= 0
+      recorrerAvenida(f, vacias)
+      Informar(f)
+      Informar(vacias)
+      Pos(PosAv+2, 1)
+    f:= 0
+    vacias:= 0
+    recorrerAvenida(f, vacias)
+    Informar(f)
+    Informar(vacias)
+  fin
+variables
+  r1:tipo1
+comenzar
+  AsignarArea(r1, ciudad1)
+  Iniciar(r1, 1, 1)
+fin

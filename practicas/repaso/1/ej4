@@ -1,0 +1,84 @@
+programa ej4
+
+procesos
+
+  proceso juntarFlores(ES f:numero)
+  comenzar
+    si HayFlorEnLaEsquina
+      mientras HayFlorEnLaEsquina
+        tomarFlor
+        f:= f + 1
+  fin
+  proceso recorrerAvenidaFlores(ES f:numero)
+  comenzar
+    repetir 99
+      juntarFlores(f)
+      mover
+    juntarFlores(f)      
+  fin
+  proceso recorrerAreaFlores(ES f:numero)
+  comenzar
+    repetir 24
+      recorrerAvenidaFlores(f)
+      Pos(PosAv+1, 1)
+    recorrerAvenidaFlores(f)
+  fin
+  
+  proceso juntarPapeles(ES p:numero)
+  comenzar
+    si HayPapelEnLaEsquina
+      mientras HayPapelEnLaEsquina
+        tomarPapel
+        p:= p + 1
+  fin
+  proceso recorrerAvenidaPapeles(ES p:numero)
+  comenzar
+    repetir 99
+      juntarPapeles(p)
+      mover
+    juntarPapeles(p)
+  fin
+  proceso recorrerAreaPapeles(ES p:numero)
+  comenzar
+    repetir 24
+      recorrerAvenidaPapeles(p)
+      Pos(PosAv+1, 1)
+    recorrerAvenidaPapeles(p)
+  fin
+areas
+  ciudad1: AreaP(1, 1, 25, 100)
+  ciudad2: AreaP(26, 1, 50, 100)
+  ciudad3: AreaP(51, 1, 75, 100)
+  ciudad4: AreaP(76, 1, 100, 100)
+robots
+  robot florero
+  variables
+    f:numero
+  comenzar
+    f:= 0
+    recorrerAreaFlores(f)
+    Pos(PosAv+26, 1)
+    recorrerAreaFlores(f)
+  fin
+
+  robot papelero
+  variables
+    p:numero
+  comenzar
+    p:= 0
+    recorrerAreaPapeles(p)
+    Pos(PosAv+26, 1)
+    recorrerAreaPapeles(p)
+  fin
+ 
+variables
+  r1: florero
+  r2: papelero
+comenzar
+  AsignarArea(r1, ciudad1)
+  AsignarArea(r1, ciudad3)
+  AsignarArea(r2, ciudad2)
+  AsignarArea(r2, ciudad4)
+  Iniciar(r1, 1, 1)
+  Iniciar(r2, 26, 1)
+fin

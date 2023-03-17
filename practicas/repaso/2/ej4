@@ -1,0 +1,141 @@
+programa ej4
+procesos
+  proceso identificarRobots
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+    EnviarMensaje(4, r4)
+  fin
+  proceso juntarFlores(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:= f + 1
+  fin
+  proceso juntarPapeles(ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:= p +1
+  fin
+  proceso juntarTodo(ES f:numero ; ES p:numero)
+  comenzar
+    juntarFlores(f)
+    juntarPapeles(p)
+  fin
+  proceso maximo(E id:numero ; E f:numero ; E p:numero ; ES max:numero ; ES maxId:numero)
+  comenzar
+    si ((f + p) > max)
+      max:= (f + p)
+      maxId:= id
+  fin
+areas
+  ciudadCentral: AreaPC(25, 25, 75, 75)
+  ciudadJefe: AreaP(1, 1, 1, 1)
+  ciudad1: AreaP(25, 1, 25, 1)
+  ciudad2: AreaP(30, 1, 30, 1)
+  ciudad3: AreaP(35, 1, 35, 1)
+  ciudad4: AreaP(40, 1, 40, 1)
+robots
+  robot jefe
+  variables
+    id, f, p, maxId, max:numero
+  comenzar
+    identificarRobots
+    max:= -1
+    repetir 10
+      Random(id, 1, 4)
+      si (id = 1)
+        EnviarMensaje(V, r1)
+        EnviarMensaje(F, r2)
+        EnviarMensaje(F, r3)
+        EnviarMensaje(F, r4)
+      sino
+        si (id = 2)
+          EnviarMensaje(V, r2)
+          EnviarMensaje(F, r1)
+          EnviarMensaje(F, r3)
+          EnviarMensaje(F, r4)
+        sino
+          si (id = 3)
+            EnviarMensaje(V, r3)
+            EnviarMensaje(F, r1)
+            EnviarMensaje(F, r2)
+            EnviarMensaje(F, r4)
+          sino
+            EnviarMensaje(V, r4)
+            EnviarMensaje(F, r1)
+            EnviarMensaje(F, r2)
+            EnviarMensaje(F, r3)
+      RecibirMensaje(f, *)
+      RecibirMensaje(p, *)
+      maximo(id, f, p, max, maxId)
+    si (maxId = 1)
+      EnviarMensaje(V, r1)
+      EnviarMensaje(F, r2)
+      EnviarMensaje(F, r3)
+      EnviarMensaje(F, r4)
+    sino
+      si (maxId = 2)
+        EnviarMensaje(F, r1)
+        EnviarMensaje(V, r2)
+        EnviarMensaje(F, r3)
+        EnviarMensaje(F, r4)
+      sino
+        si (maxId = 3)
+          EnviarMensaje(F, r1)
+          EnviarMensaje(F, r2)
+          EnviarMensaje(V, r3)
+          EnviarMensaje(F, r4)
+        sino
+          EnviarMensaje(F, r1)
+          EnviarMensaje(F, r2)
+          EnviarMensaje(F, r3)
+          EnviarMensaje(V, r4)
+    Informar('El-ganador-es', maxId)
+  fin
+  
+  robot jugador
+  variables
+    id, av, ca, avIn, caIn f, p:numero
+    ok, gane:boolean
+  comenzar
+    RecibirMensaje(id, jefe)
+    avIn:= PosAv
+    caIn:= PosCa
+    f:= 0
+    p:= 0
+    repetir 10
+      RecibirMensaje(ok, jefe)
+      si ok
+        Random(av, 25, 75)
+        Random(ca, 25, 75)
+        Pos(av, ca)
+        juntarTodo(f, p)
+        Pos(avIn, caIn)
+        EnviarMensaje(f, jefe)
+        EnviarMensaje(p, jefe)
+    RecibirMensaje(gane, jefe)
+    si gane
+      Pos(50, 50)
+  fin
+variables
+  jefe: jefe
+  r1, r2, r3, r4: jugador
+comenzar
+  AsignarArea(jefe, ciudadJefe)
+  AsignarArea(r1, ciudadCentral)
+  AsignarArea(r2, ciudadCentral)
+  AsignarArea(r3, ciudadCentral)
+  AsignarArea(r4, ciudadCentral)
+  AsignarArea(r1, ciudad1)
+  AsignarArea(r2, ciudad2)
+  AsignarArea(r3, ciudad3)
+  AsignarArea(r4, ciudad4)
+  Iniciar(jefe, 1, 1)
+  Iniciar(r1, 25, 1)
+  Iniciar(r2, 30, 1)
+  Iniciar(r3, 35, 1)
+  Iniciar(r4, 40, 1)
+fin

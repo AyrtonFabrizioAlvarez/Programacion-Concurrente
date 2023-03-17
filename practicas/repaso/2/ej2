@@ -1,0 +1,68 @@
+programa ej2
+procesos
+  proceso juntarFlores(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:= f+1
+  fin
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso hacerAlto(ES f:numero)
+  variables
+    alt:numero
+  comenzar
+    Random(alt, 1, 5)
+    repetir (alt)
+      juntarFlores(f)
+      mover
+    juntarFlores(f)
+    derecha
+  fin
+  proceso hacerEscalon(ES f:numero)
+  comenzar
+    hacerAlto(f)
+    mover
+    juntarFlores(f)
+    izquierda
+  fin
+areas
+  ciudad1: AreaC(2, 1, 17, 30)
+  ciudadJ: AreaP(1, 1, 1, 1)
+robots
+  robot jefe
+  variables
+    f, total:numero
+  comenzar
+    total:= 0
+    repetir 3
+      RecibirMensaje(f, *)
+      total:= total + f
+    Informar('Flores-juntadas-', total)
+  fin
+  
+  robot florero
+  variables
+    f:numero
+  comenzar
+    f:= 0
+    repetir 4
+      hacerEscalon(f)
+    EnviarMensaje(f, jefe)
+  fin
+variables
+  jefe: jefe
+  r1, r2, r3: florero
+comenzar
+  AsignarArea(jefe, ciudadJ)
+  AsignarArea(r1, ciudad1)
+  AsignarArea(r2, ciudad1)
+  AsignarArea(r3, ciudad1)
+  Iniciar(jefe, 1, 1)
+  Iniciar(r1, 2, 1)
+  Iniciar(r2, 7, 1)
+  Iniciar(r3, 12, 1)
+fin

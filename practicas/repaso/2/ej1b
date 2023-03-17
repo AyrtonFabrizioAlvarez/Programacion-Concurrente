@@ -1,0 +1,69 @@
+programa ej1
+procesos
+  proceso identificarRobots
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+  fin
+  proceso juntarFlores(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:= f + 1
+  fin
+  proceso hacerEsquinas(ES f:numero)
+  comenzar
+    repetir 9
+      juntarFlores(f)
+      mover
+    juntarFlores(f)
+  fin
+areas
+  ciudad1: AreaP(1, 1, 1, 10)
+  ciudad2: AreaP(2, 11, 2, 20)
+  ciudad3: AreaP(2, 1, 2, 1)
+robots
+  robot florero
+  variables
+    f:numero
+    id:numero
+  comenzar
+    f:= 0
+    RecibirMensaje(id, jefe)
+    hacerEsquinas(f)
+    EnviarMensaje(id, jefe)
+    EnviarMensaje(f, jefe)
+  fin
+  robot jefe
+  variables
+    f1:numero
+    f2:numero
+    id:numero
+  comenzar
+    identificarRobots
+    repetir 2
+      RecibirMensaje(id, *)
+      si (id = 1)
+        RecibirMensaje(f1, r1)
+      sino
+        RecibirMensaje(f2, r2)
+    si (f1 > f2)
+      Informar('El-ganador-es-r1-por', f1 - f2)
+    sino
+      si (f2 > f1)
+        Informar('El-ganador-es-r2-por', f2 - f1)
+      sino
+        Informar('Ambos-juntaron-la-misma-cantidad', f1)
+  fin
+variables
+  r1: florero
+  r2: florero
+  jefe: jefe
+comenzar
+  AsignarArea(r1, ciudad1)
+  AsignarArea(r2, ciudad2)
+  AsignarArea(jefe, ciudad3)
+  Iniciar(jefe, 2, 1)
+  Iniciar(r1, 1, 1)
+  Iniciar(r2, 2, 11)
+fin

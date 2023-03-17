@@ -1,0 +1,104 @@
+programa ej3
+procesos
+  proceso juntarFlores(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:= f + 1
+  fin
+  proceso juntarPapeles(ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:= p + 1
+  fin
+  proceso hacerRecorridoFlores(ES f:numero)
+  comenzar
+    repetir 9
+      juntarFlores(f)
+      mover
+    juntarFlores(f)
+  fin
+  proceso hacerRecorridoPapeles(ES p:numero)
+  comenzar
+    repetir 9
+      juntarPapeles(p)
+      mover
+    juntarPapeles(p)
+  fin
+areas
+  ciudadF: AreaPC(1, 1, 40, 1)
+  ciudadP: AreaPC(1, 5, 40, 5)
+robots
+  robot florero1
+  variables
+    f:numero
+    ok:boolean
+  comenzar
+    f:= 0
+    derecha
+    hacerRecorridoFlores(f)
+    EnviarMensaje(V, a2)
+    Pos(PosAv+11, PosCa)
+    RecibirMensaje(ok, a2)
+    hacerRecorridoFlores(f)
+    EnviarMensaje(f, a2)
+  fin
+  robot florero2
+  variables
+    f, aux:numero
+    ok:boolean
+  comenzar
+    derecha
+    RecibirMensaje(ok, a1)
+    hacerRecorridoFlores(f)
+    EnviarMensaje(V, a1)
+    Pos(PosAv+11, PosCa)
+    RecibirMensaje(aux, a1)
+    hacerRecorridoFlores(f)
+    Informar('Total-equipo-A', f + aux)
+  fin
+  
+  robot papelero1
+  variables
+    p:numero
+    ok:boolean
+  comenzar
+    p:= 0
+    derecha
+    hacerRecorridoPapeles(p)
+    EnviarMensaje(V, b2)
+    Pos(PosAv+11, PosCa)
+    RecibirMensaje(ok, b2)
+    hacerRecorridoPapeles(p)
+    EnviarMensaje(p, b2)
+  fin
+  robot papelero2
+  variables
+    p, aux:numero
+    ok:boolean
+  comenzar
+    derecha
+    RecibirMensaje(ok, b1)
+    hacerRecorridoPapeles(p)
+    EnviarMensaje(V, b1)
+    Pos(PosAv+11, PosCa)
+    RecibirMensaje(aux, b1)
+    hacerRecorridoPapeles(p)
+    Informar('Total-equipo-B', p + aux)
+  fin
+variables
+  a1: florero1
+  a2: florero2
+  b1: papelero1
+  b2: papelero2
+comenzar
+  AsignarArea(a1, ciudadF)
+  AsignarArea(a2, ciudadF)
+  AsignarArea(b1, ciudadP)
+  AsignarArea(b2, ciudadP)
+  Iniciar(a1, 1, 1)
+  Iniciar(a2, 11, 1)
+  Iniciar(b1, 1, 5)
+  Iniciar(b2, 11, 5)
+fin

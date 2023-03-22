@@ -1,0 +1,116 @@
+programa ej1
+procesos
+  proceso juntarFlores(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:= f + 1
+  fin
+  proceso juntarPapeles(ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:= p + 1
+  fin
+  proceso hacerEsquinaFlorero(E avIn:numero ; E caIn:numero ; ES f:numero)
+  variables
+    av, ca:numero
+  comenzar
+    Random(av, 1, 5)
+    Random(ca, 1, 10)
+    BloquearEsquina(av, ca)
+    Pos(av, ca)
+    repetir 8
+      derecha
+    juntarFlores(f)
+    Pos(avIn, caIn)
+    LiberarEsquina(av, ca)
+  fin
+  proceso dejarUnaFlor(E avIn:numero ; E caIn:numero)
+  comenzar
+    BloquearEsquina(10, 10)
+    Pos(10, 10)
+    depositarFlor
+    repetir 8
+      derecha
+    Pos(avIn, caIn)
+    LiberarEsquina(10, 10)
+  fin
+  proceso hacerEsquinaPapelero(E avIn:numero ; E caIn:numero ; ES p:numero)
+  variables
+    av, ca:numero
+  comenzar
+    Random(av, 6, 10)
+    Random(ca, 1, 9)
+    BloquearEsquina(av, ca)
+    Pos(av, ca)
+    repetir 8
+      derecha
+    juntarPapeles(p)
+    Pos(avIn, caIn)
+    LiberarEsquina(av, ca)
+  fin
+  proceso dejarUnPapel(E avIn:numero ; E caIn:numero)
+  comenzar
+    BloquearEsquina(10, 10)
+    Pos(10, 10)
+    repetir 8
+      derecha
+    depositarPapel
+    Pos(avIn, caIn)
+    LiberarEsquina(10, 10)
+  fin
+areas
+  ciudad: AreaC(10, 10, 10, 10)
+  ciudadFloreros: AreaPC(1, 1, 5, 10)
+  ciudadPapeleros: AreaPC(6, 1, 10, 9)
+  ciudadF1: AreaP(6, 10, 6, 10)
+  ciudadF2: AreaP(7, 10, 7, 10)
+  ciudadP1: AreaP(8, 10, 8, 10)
+  ciudadP2: AreaP(9, 10, 9, 10)
+robots
+  robot florero
+  variables
+    f, avIn, caIn:numero
+  comenzar
+    f:= 0
+    avIn:= PosAv
+    caIn:= PosCa
+    repetir 5
+      hacerEsquinaFlorero(avIn, caIn, f)
+    repetir f
+      dejarUnaFlor(avIn, caIn)
+  fin
+  robot papelero
+  variables
+    p, avIn, caIn:numero
+  comenzar
+    p:= 0
+    avIn:= PosAv
+    caIn:= PosCa
+    repetir 3
+      hacerEsquinaPapelero(avIn, caIn, p)
+    repetir p
+      dejarUnPapel(avIn, caIn)
+  fin
+variables
+  f1, f2: florero
+  p1, p2: papelero
+comenzar
+  AsignarArea(f1, ciudadFloreros)
+  AsignarArea(f1, ciudadF1)
+  AsignarArea(f1, ciudad)
+  AsignarArea(f2, ciudadFloreros)
+  AsignarArea(f2, ciudadF2)
+  AsignarArea(f2, ciudad)
+  AsignarArea(p1, ciudadPapeleros)
+  AsignarArea(p1, ciudadP1)
+  AsignarArea(p1, ciudad)
+  AsignarArea(p2, ciudadPapeleros)
+  AsignarArea(p2, ciudadP2)
+  AsignarArea(p2, ciudad)
+  Iniciar(f1, 6, 10)
+  Iniciar(f2, 7, 10)
+  Iniciar(p1, 8, 10)
+  Iniciar(p2, 9, 10)
+fin

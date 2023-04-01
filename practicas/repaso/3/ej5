@@ -1,0 +1,96 @@
+programa ej5
+procesos
+  proceso identificarRobots
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+    EnviarMensaje(4, r4)
+  fin
+  proceso irFuente(ES p:numero ; ES ok:boolean)
+  variables
+    avIn, caIn:numero
+  comenzar
+    avIn:= PosAv
+    caIn:= PosCa
+    BloquearEsquina(11, 11)
+    Pos(11, 11)
+    si HayPapelEnLaEsquina
+      tomarPapel
+      p:= p + 1
+    sino
+      ok:= F
+    Pos(avIn, caIn)
+    LiberarEsquina(11, 11)
+  fin
+  proceso maximo(E id:numero ; E pasos:numero ; ES maxId:numero ; ES maxPasos:numero)
+  comenzar
+    si (pasos > maxPasos)
+      maxPasos:= pasos
+      maxId:= id
+  fin
+areas
+  fuente: AreaPC(11, 11, 11, 11)
+  ciudadJefe: AreaP(1, 1, 1, 1)
+  ciudad1: AreaP(4, 1, 4, 100)
+  ciudad2: AreaP(6, 1, 6, 100)
+  ciudad3: AreaP(8, 1, 8, 100)
+  ciudad4: AreaP(10, 1, 10, 100)
+robots
+  robot jefe
+  variables
+    id, pasos, maxId, maxPasos:numero
+  comenzar
+    identificarRobots
+    maxId:= -1
+    maxPasos:= -1
+    repetir 4
+      RecibirMensaje(id, *)
+      si (id = 1)
+        RecibirMensaje(pasos, r1)
+      sino
+        si (id = 2)
+          RecibirMensaje(pasos, r2)
+        sino
+          si (id = 3)
+            RecibirMensaje(pasos, r3)
+          sino
+            RecibirMensaje(pasos, r4)
+      maximo(id, pasos, maxId, maxPasos)
+    Informar('El-que-mas-avanzo-fue', maxId)
+    Informar('Avanzo-un-total-de', maxPasos)
+  fin
+  robot trabajador
+  variables
+    id, p:numero
+    hayP:boolean
+  comenzar
+    RecibirMensaje(id, jefe)
+    hayP:= V
+    mientras (hayP) & (PosCa<100)
+      irFuente(p, hayP)
+      si hayP
+        depositarPapel
+        mover
+    EnviarMensaje(id, jefe)
+    EnviarMensaje(p, jefe)
+  fin
+variables
+  jefe: jefe
+  r1, r2, r3, r4: trabajador
+comenzar
+  AsignarArea(jefe, ciudadJefe)
+  AsignarArea(r1, fuente)
+  AsignarArea(r1, ciudad1)
+  AsignarArea(r2, fuente)
+  AsignarArea(r2, ciudad2)
+  AsignarArea(r3, fuente)
+  AsignarArea(r3, ciudad3)
+  AsignarArea(r4, fuente)
+  AsignarArea(r4, ciudad4)
+  Iniciar(jefe, 1, 1)
+  Iniciar(r1, 4, 1)
+  Iniciar(r2, 6, 1)
+  Iniciar(r3, 8, 1)
+  Iniciar(r4, 10, 1)
+fin

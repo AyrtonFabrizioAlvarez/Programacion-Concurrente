@@ -1,0 +1,164 @@
+programa ej2
+procesos
+  proceso identificarRobots
+  comenzar
+    EnviarMensaje(1, rf)
+    EnviarMensaje(2, rp)
+  fin
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarFlores(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:= f + 1
+  fin
+  proceso juntarPapeles(ES p:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:= p + 1
+  fin
+  proceso hacerEscalonF(ES f:numero ; E lado:numero)
+  comenzar
+    repetir lado
+      mover
+    derecha
+    juntarFlores(f)
+    repetir lado
+      mover
+    izquierda
+    juntarFlores(f)
+  fin
+  proceso hacerEscalonP(ES p:numero ; E lado:numero)
+  comenzar
+    repetir lado
+      mover
+    izquierda
+    juntarPapeles(p)
+    repetir lado
+      mover
+    derecha
+    juntarPapeles(p)
+  fin
+  proceso ultimoEscalonF(ES f:numero)
+  comenzar
+    mover
+    juntarFlores(f)
+    BloquearEsquina(PosAv + 1, PosCa)
+    Pos(PosAv + 1, PosCa)
+    repetir 8
+      derecha
+    Pos(PosAv - 1, PosCa)
+    LiberarEsquina(PosAv + 1, PosCa)
+    izquierda
+  fin
+  proceso ultimoEscalonP(ES p:numero)
+  comenzar
+    mover
+    juntarPapeles(p)
+    BloquearEsquina(PosAv - 1, PosCa)
+    Pos(PosAv - 1, PosCa)
+    repetir 8
+      derecha
+    Pos(PosAv + 1, PosCa)
+    LiberarEsquina(PosAv - 1, PosCa)
+    derecha
+  fin
+  proceso recorrido1F(ES f:numero ; E lado:numero)
+  variables
+    n:numero
+  comenzar
+    n:= 5
+    repetir (n - 1)
+      hacerEscalonF(f, lado)
+      lado:= lado - 1
+  fin
+  proceso recorrido2F(ES f:numero ; E lado:numero)
+  variables
+    n:numero
+  comenzar
+    n:= 5
+    repetir (n - 1)
+      hacerEscalonF(f, lado)
+      lado:= lado + 1
+  fin
+  proceso recorrido1P(ES p:numero ; E lado:numero)
+  variables
+    n:numero
+  comenzar
+    n:=5
+    repetir (n - 1)
+      hacerEscalonP(p, lado)
+      lado:= lado - 1
+  fin
+  proceso recorrido2P(ES p:numero ; E lado:numero)
+  variables
+    n:numero
+  comenzar
+    n:= 5
+    repetir (n - 1)
+      hacerEscalonP(p, lado)
+      lado:= lado + 1
+  fin
+areas
+  ciudadF: AreaP(1, 1, 15, 30)
+  ciudadP: AreaP(17, 1, 31, 30)
+  esquinaComp: AreaPC(16, 16, 16, 16)
+  ciudadJefe: AreaPC(16, 1, 16, 1)
+robots
+  robot jefe
+  variables
+    id:numero
+  comenzar
+    identificarRobots
+    repetir 2
+      RecibirMensaje(id, *)
+    si (id = 1)
+      Informar('Ganador-robot2', 2)
+    sino
+      Informar('ganador-robot1', 1)
+  fin
+  robot florero
+  variables
+    f, id, lado:numero
+  comenzar
+    RecibirMensaje(id, jefe)
+    lado:= 5
+    recorrido1F(f, lado)
+    ultimoEscalonF(f)
+    lado:= 2
+    recorrido2F(f, lado)
+    Informar('flores-juntadas', f)
+    EnviarMensaje(id, jefe)
+  fin
+  robot papelero
+  variables
+    p, id, lado:numero
+  comenzar
+    RecibirMensaje(id, jefe)
+    lado:= 5
+    recorrido1P(p, lado)
+    ultimoEscalonP(p)
+    lado:= 2
+    recorrido2P(p, lado)
+    Informar('papeles-juntados', p)
+    EnviarMensaje(id, jefe)
+  fin
+variables
+  rf:  florero
+  rp: papelero
+  jefe:jefe
+comenzar
+  AsignarArea(rf, ciudadF)
+  AsignarArea(rf, esquinaComp)
+  AsignarArea(rp, ciudadP)
+  AsignarArea(rp, esquinaComp)
+  AsignarArea(jefe, ciudadJefe)
+  Iniciar(rf, 1, 1)
+  Iniciar(rp, 31, 1)
+  Iniciar(jefe, 16, 1)
+fin

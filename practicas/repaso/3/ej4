@@ -1,0 +1,97 @@
+programa ej4
+procesos
+  proceso identificarRobots
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+    EnviarMensaje(4, r4)
+  fin
+  proceso juntarUnaFlor(ES ok:boolean)
+  variables
+    avIn, caIn:numero
+  comenzar
+    avIn:= PosAv
+    caIn:= PosCa
+    BloquearEsquina(10, 10)
+    Pos(10, 10)
+    si HayFlorEnLaEsquina
+      tomarFlor
+    sino
+      ok:= F
+    BloquearEsquina(11, 11)
+    Pos(11, 11)
+    LiberarEsquina(10, 10)
+    si ok
+      depositarFlor
+    Pos(avIn, caIn)
+    LiberarEsquina(11, 11)
+  fin
+  proceso juntarFlores(ES f:numero)
+  variables
+    avIn, caIn:numero
+  comenzar
+    avIn:= PosAv
+    caIn:= PosCa
+    Pos(11, 11)
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:= f + 1
+    Pos(avIn, caIn)
+  fin
+areas
+  esquina10: AreaPC(10, 10, 10, 10)
+  esquina11: AreaC(11, 11, 11, 11)
+  ciudadJefe: AreaP(1, 1, 1, 1)
+  ciudad1: AreaP(9, 9, 9, 9)
+  ciudad2: AreaP(9, 10, 9, 10)
+  ciudad3: AreaP(9, 11, 9, 11)
+  ciudad4: AreaP(9, 12, 9, 12)
+robots
+  robot jefe
+  variables
+    id, f:numero
+  comenzar
+    identificarRobots
+    f:= 0
+    repetir 4
+      RecibirMensaje(id, *)
+    Informar('El-ultimo-robot-fue-el', id)
+    juntarFlores(f)
+    Informar('junte', f)
+  fin
+  robot recolector
+  variables
+    id:numero
+    hayF:boolean
+  comenzar
+    RecibirMensaje(id, jefe)
+    hayF:= V
+    mientras hayF
+      juntarUnaFlor(hayF)
+    EnviarMensaje(id, jefe)
+  fin
+variables
+  jefe: jefe
+  r1, r2, r3, r4: recolector
+comenzar
+  AsignarArea(jefe, ciudadJefe)
+  AsignarArea(jefe, esquina11)
+  AsignarArea(r1, ciudad1)
+  AsignarArea(r1, esquina10)
+  AsignarArea(r1, esquina11)
+  AsignarArea(r2, ciudad2)
+  AsignarArea(r2, esquina10)
+  AsignarArea(r2, esquina11)
+  AsignarArea(r3, ciudad3)
+  AsignarArea(r3, esquina10)
+  AsignarArea(r3, esquina11)
+  AsignarArea(r4, ciudad4)
+  AsignarArea(r4, esquina10)
+  AsignarArea(r4, esquina11)
+  Iniciar(jefe, 1, 1)
+  Iniciar(r1, 9, 9)
+  Iniciar(r2, 9, 10)
+  Iniciar(r3, 9, 11)
+  Iniciar(r4, 9, 12)
+fin

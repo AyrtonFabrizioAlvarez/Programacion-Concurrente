@@ -1,0 +1,148 @@
+programa ej6
+procesos
+  proceso identificarRobots
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+  fin
+  proceso juntarF
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  proceso juntarFyP
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso juntarP
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso hacerCuadranteF
+  comenzar
+    repetir 4
+      repetir 5
+        juntarF
+        mover
+      juntarF
+      derecha
+  fin
+  proceso hacerCuadranteFyP
+  comenzar
+    repetir 4
+      repetir 9
+        juntarFyP
+        mover
+      juntarFyP
+      derecha
+  fin
+  proceso hacerCuadranteP
+  comenzar
+    repetir 4
+      repetir 6
+        juntarP
+        mover
+      juntarP
+      derecha
+  fin
+areas
+  cuadrantes: AreaPC(2, 2, 16, 16)
+  ciudadJefe: AreaP(1, 1, 1, 1)
+  finales: AreaPC(1, 20, 100, 23)
+robots
+  robot jefe
+  variables
+    id:numero
+  comenzar
+    identificarRobots
+    RecibirMensaje(id, *)
+    si (id = 1)
+      EnviarMensaje(20, r1)
+    sino
+      si (id =2)
+        EnviarMensaje(20, r2)
+      sino
+        EnviarMensaje(20, r3)
+    RecibirMensaje(id, *)
+    si (id = 1)
+      EnviarMensaje(21, r1)
+    sino
+      si (id = 2)
+        EnviarMensaje(21, r2)
+      sino
+        EnviarMensaje(21, r3)
+    RecibirMensaje(id, *)
+    si (id = 1)
+      EnviarMensaje(22, r1)
+    sino
+      si (id = 2)
+        EnviarMensaje(22, r2)
+      sino
+        EnviarMensaje(22, r3)  
+  fin
+  robot florero
+  variables
+    id, ca:numero
+  comenzar
+    RecibirMensaje(id, jefe)
+    hacerCuadranteF
+    EnviarMensaje(id, jefe)
+    RecibirMensaje(ca, jefe)
+    Pos(1, ca)
+    derecha
+    mientras ((HayFlorEnLaBolsa) & (PosAv<100))
+      depositarFlor
+      mover
+  fin
+  robot floreroYpapelero
+  variables
+    id, ca:numero
+  comenzar
+    RecibirMensaje(id, jefe)
+    hacerCuadranteFyP
+    EnviarMensaje(id, jefe)
+    RecibirMensaje(ca, jefe)
+    Pos(1, ca)
+    derecha
+    mientras ((HayFlorEnLaBolsa) & (HayPapelEnLaBolsa) & (PosAv<100))
+      depositarPapel
+      depositarFlor
+      mover    
+  fin
+  robot papelero
+  variables
+    id, ca:numero
+  comenzar
+    RecibirMensaje(id, jefe)
+    hacerCuadranteP
+    EnviarMensaje(id, jefe)
+    RecibirMensaje(ca, jefe)
+    Pos(1, ca)
+    derecha
+    mientras ((HayPapelEnLaBolsa) & (PosAv<100))
+      depositarPapel
+      mover
+  fin
+variables
+  jefe: jefe
+  r1: florero
+  r2: floreroYpapelero
+  r3: papelero
+comenzar
+  AsignarArea(jefe, ciudadJefe)
+  AsignarArea(r1, cuadrantes)
+  AsignarArea(r2, cuadrantes)
+  AsignarArea(r3, cuadrantes)
+  AsignarArea(r1, finales)
+  AsignarArea(r2, finales)
+  AsignarArea(r3, finales)
+  Iniciar(jefe, 1, 1)
+  Iniciar(r1, 2, 2)
+  Iniciar(r2, 5, 5)
+  Iniciar(r3, 9, 9)
+fin

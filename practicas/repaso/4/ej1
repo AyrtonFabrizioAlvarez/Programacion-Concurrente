@@ -1,0 +1,114 @@
+programa ej1
+procesos
+  proceso identificarRobots
+  comenzar
+    EnviarMensaje(1, c1)
+    EnviarMensaje(2, c2)
+    EnviarMensaje(3, c3)
+  fin
+  proceso juntarFlores(E n:numero)
+  comenzar
+    repetir n
+      tomarFlor
+  fin
+  proceso dejarFlores(E n:numero)
+  comenzar
+    repetir n
+      depositarFlor
+  fin
+  proceso avanzarDejandoFlores(E n:numero)
+  comenzar
+    mientras ( (n > 0) & (PosCa < 10) )
+      depositarFlor
+      mover
+      n:= n -1
+    si ( (n > 0) & (PosCa = 10) )
+      depositarFlor
+  fin
+areas
+  ciudadServidor: AreaP(100, 100, 100, 100)
+  ciudad1: AreaPC(1, 1, 1, 100)
+  ciudad2: AreaPC(2, 1, 2, 100)
+  ciudad3: AreaPC(3, 1, 3, 100)
+robots
+  robot servidor
+  variables
+    id, f, av, ca terminaron:numero
+  comenzar
+    terminaron:= 0
+    identificarRobots
+    mientras (terminaron < 3)
+      RecibirMensaje(id, *)
+      si (id = 1)
+        RecibirMensaje(f, c1)
+        si (f <> 0)
+          RecibirMensaje(av, c1)
+          RecibirMensaje(ca, c1)
+          Pos(av, ca)
+          dejarFlores(f)
+          Pos(100, 100)
+          EnviarMensaje(V, c1)
+        sino
+          terminaron:= terminaron + 1
+      sino
+        si (id = 2)
+          RecibirMensaje(f, c2)
+          si (f <> 0)
+            RecibirMensaje(av, c2)
+            RecibirMensaje(ca, c2)
+            Pos(av, ca)
+            dejarFlores(f)
+            Pos(100, 100)
+            EnviarMensaje(V, c2)
+          sino
+            terminaron:= terminaron + 1
+        sino
+          RecibirMensaje(f, c3)
+          si (f <> 0)
+            RecibirMensaje(av, c3)
+            RecibirMensaje(ca, c3)
+            Pos(av, ca)
+            dejarFlores(f)
+            Pos(100, 100)
+            EnviarMensaje(V, c3)
+          sino
+            terminaron:= terminaron + 1
+  fin
+  robot cliente
+  variables
+    id, f, avAct, caSig:numero
+    ok:boolean
+  comenzar
+    RecibirMensaje(id, servidor)
+    avAct:= PosAv
+    mientras PosCa < 10
+      Random(f, 1, 4)
+      EnviarMensaje(id, servidor)
+      EnviarMensaje(f, servidor)
+      caSig:= PosCa + 1
+      EnviarMensaje(avAct, servidor)
+      EnviarMensaje(caSig, servidor)
+      RecibirMensaje(ok, servidor)
+      Pos(avAct, caSig)
+      juntarFlores(f)
+      Pos(avAct, PosCa - 1)
+      avanzarDejandoFlores(f)
+    EnviarMensaje(id, servidor)
+    EnviarMensaje(0, servidor)
+  fin
+variables
+  servidor: servidor
+  c1, c2, c3: cliente
+comenzar
+  AsignarArea(servidor, ciudadServidor)
+  AsignarArea(servidor, ciudad1)
+  AsignarArea(servidor, ciudad2)
+  AsignarArea(servidor, ciudad3)
+  AsignarArea(c1, ciudad1)
+  AsignarArea(c2, ciudad2)
+  AsignarArea(c3, ciudad3)
+  Iniciar(servidor, 100, 100)
+  Iniciar(c1, 1, 1)
+  Iniciar(c2, 2, 1)
+  Iniciar(c3, 3, 1)
+fin
